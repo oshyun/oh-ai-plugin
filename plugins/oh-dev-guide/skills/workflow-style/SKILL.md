@@ -56,6 +56,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   머지 완료:
   ```
   ════════════════════════════════════════════════════════════
+    Repo    : <owner>/<repo>
     Merged  : work/<topic> -> <base-branch>
     Commit  : <sha7>  "<commit message>"
     Changed : <N> files  +<ins> -<del>
@@ -66,6 +67,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   worktree 생성:
   ```
   ════════════════════════════════════════════════════════════
+    Repo    : <owner>/<repo>
     Worktree: ../<repo>-wt-<topic>
     Branch  : work/<topic>
     Base    : origin/<base-branch> @ <sha7>
