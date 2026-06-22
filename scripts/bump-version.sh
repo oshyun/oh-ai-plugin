@@ -3,7 +3,7 @@
 set -euo pipefail
 
 PLUGIN_JSON="$(dirname "$0")/../plugins/oh-dev-guide/.claude-plugin/plugin.json"
-NEW_VERSION="$(date +%Y%m%d%H%M%S)"
+NEW_VERSION="$(date +%Y.%m.%d.%H.%M.%S)"
 
 # jq 있으면 사용, 없으면 sed fallback
 if command -v jq &>/dev/null; then
