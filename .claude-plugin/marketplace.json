@@ -2,8 +2,8 @@
   "name": "oshyun",
   "description": "oshyun 개인 Claude Code 플러그인 카탈로그",
   "owner": {
-    "name": "sh.o",
-    "email": "sh.o@navercorp.com"
+    "name": "oshyun",
+    "email": "osh218@gmail.com"
   },
   "plugins": [
     {
