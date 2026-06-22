@@ -32,14 +32,14 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 - **작업 중 중간 rebase.** 작업이 길어지면 주기적으로 `git fetch origin`으로 기본 브랜치 업데이트를 확인한다.
   - 새 커밋이 쌓였으면 `git rebase origin/<기본브랜치>`로 미리 올려 충돌을 조기에 해소한다.
   - 충돌이 크면 사용자에게 알리고 함께 해결한다.
-- **머지 전 순서: rebase → 사용자 승인 → merge.** worktree 커밋 완료 후 아래 순서를 반드시 지킨다.
+- **머지 전 순서: rebase → simplify → 사용자 승인 → merge.** worktree 커밋 완료 후 아래 순서를 반드시 지킨다.
   1. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>` — 최신 기본 브랜치 위로 올린다. (충돌 시에만 멈추고 알린다.)
-  2. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 명시적으로 받는다.
-  3. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
+  2. worktree에서 simplify/cleanup 패스를 실행한다.
+  3. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 명시적으로 받는다.
+  4. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
   - 머지 직전 `git fetch`로 base 이후 다른 push(다른 세션 머지·CI bump 등)가 끼었는지 확인하고, 가라앉으면 그 위로 rebase 후 진행.
   - push가 거부되면(race) fetch→rebase→merge를 멈추지 말고 재시도해 원자적으로 반영한다. 충돌 때만 멈추고 알린다.
-- **코드 변경 작업을 마치면 simplify/cleanup 패스를 자동 실행** (조사성·질의성 작업엔 미적용).
 - **커밋 전 사용자 가이드 영향 확인.** 기능·동작·구조가 바뀌면 README 등 사용자 가이드도 **같은 커밋**에 갱신한다.
   - API 변경 시 API 문서도 함께 업데이트.
 - **prod 서비스 교체는 에이전트가 직접 실행하지 않는다.** 코드 변경·커밋·push까지 담당하고, 실제 서비스 교체(배포)는 사용자에게 제안에 그친다.
