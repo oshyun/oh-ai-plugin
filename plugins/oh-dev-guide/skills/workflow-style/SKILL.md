@@ -28,6 +28,9 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   - 독립 단일 작업은 완료 즉시 push.
 - **커밋 메시지에 작성자 정보(`Co-Authored-By`) 미포함.** 기본값을 두지 말고 작업 내용을 한 줄로 적는다.
 - **기본 브랜치에 직접 커밋하지 않는다.** 작업은 작업 브랜치(`work/<주제>`)에서.
+- **머지 전 사용자 승인 필수.** worktree 작업이 끝나 커밋까지 완료된 뒤, merge·push 전에 반드시 사용자의 확인을 받는다.
+  - 변경 요약(무엇을 바꿨는지)을 보여주고 "머지할까요?" 를 명시적으로 묻는다.
+  - 사용자가 승인하면 그때 merge·push·worktree remove를 진행한다.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/master`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
   - 머지 직전 `git fetch`로 base 이후 다른 push(다른 세션 머지·CI bump 등)가 끼었는지 확인하고, 가라앉으면 그 위로 rebase 후 진행.
   - push가 거부되면(race) fetch→rebase→merge를 멈추지 말고 재시도해 원자적으로 반영한다. 충돌 때만 멈추고 알린다.
