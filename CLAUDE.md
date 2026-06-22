@@ -11,3 +11,12 @@ bash scripts/bump-version.sh
 - `plugins/oh-dev-guide/.claude-plugin/plugin.json`의 `version` 필드를 현재 시각(`YYYY.MM.DD.HH.MM.SS`)으로 갱신한다.
 - **수동으로 version 필드를 편집하지 않는다.** 항상 스크립트를 사용한다.
 - bump 후 `plugin.json`을 같은 커밋에 포함한다.
+
+## 플러그인 업데이트 (push 후 세션 반영)
+
+```
+/plugin marketplace update oshyun
+/reload-plugins
+```
+
+- `/plugin` 단독이나 축약 표현은 틀리다. 위 두 줄을 정확히 안내한다.
