@@ -13,9 +13,8 @@ plugins/
   oh-dev-guide/                         ← 확장형 개인 플러그인
     .claude-plugin/plugin.json      ← version: YYYY.MM.DD.HH.mm.ss
     skills/
-      coding-style/SKILL.md         ← 코드 작성 패턴·리뷰 기준
-      doc-style/SKILL.md            ← 문서·커밋 메시지 스타일
-      workflow-style/SKILL.md       ← git 워크플로우·에이전트 응답 스타일
+      coding-style/SKILL.md         ← 코드 작성 패턴·리뷰 기준 (글쓰기 스타일 포함)
+      workflow-style/SKILL.md       ← git 워크플로우·문서 동기화·에이전트 응답 스타일
 scripts/
   bump-version.sh                   ← 버전 현재 시각으로 업데이트
 ```
