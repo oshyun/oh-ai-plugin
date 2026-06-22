@@ -13,7 +13,8 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 절차:
 
 1. **첫 편집 전에 worktree부터.** 반드시 `git fetch origin`으로 base를 최신화한 뒤 만든다.
-   - `git fetch origin && git worktree add --no-track -b work/<주제> <경로> origin/master`
+   - `git fetch origin && git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> origin/master`
+   - 경로는 **레포 한 단계 위**에 `../<레포명>-wt-<주제>` 형식으로 만든다. (예: `../fdc-bot-wt-auth-fix`)
 2. **`--no-track` 필수.** upstream이 `origin/master`로 잡히면 GUI의 pull/sync가 작업 커밋을 기본 브랜치로 직행 push할 수 있다(실제 사고 사례).
 3. **모든 Read/Edit는 worktree 경로에서.** 커밋은 `git add <개별 파일>`로 **내 파일만** — `git add -A`·`git add src/` 금지(다른 미커밋 작업이 휩쓸려 들어감).
 4. **rebase까지만 worktree에서.** 머지 단계(`checkout master`·`merge`·`push`·`worktree remove`)는 **main tree에서** 실행한다.
