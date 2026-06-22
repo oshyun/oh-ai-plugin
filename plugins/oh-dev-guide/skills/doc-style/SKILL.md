@@ -1,6 +1,6 @@
 ---
 name: doc-style
-description: 개인 문서화 습관. 가이드·API 문서·주석·README를 작성하거나 갱신할 때 적용한다. Personal documentation habits for writing or updating guides, API docs, comments, and READMEs.
+description: 개인 문서화 습관. 코드·구조 변경 시 README 등 사용자 가이드 영향 체크 필수. 문서를 직접 작성·갱신할 때도 적용한다. Personal documentation habits — check README/guide impact on ANY code or structural change, and apply when writing or updating docs.
 ---
 
 # Doc Style
