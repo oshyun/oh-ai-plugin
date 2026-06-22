@@ -1,6 +1,6 @@
 {
-  "name": "oh-dev-rule",
-  "displayName": "Oh Dev Rule",
+  "name": "oh-dev-styles",
+  "displayName": "Oh Dev Styles",
   "description": "개인 개발 습관·코딩 패턴·git 워크플로우 가이드라인. 코드 작성·리뷰·리팩토링·커밋 시 적용.",
   "author": {
     "name": "sh.o",
