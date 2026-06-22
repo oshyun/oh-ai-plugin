@@ -1,6 +1,6 @@
-# sh-plugins
+# ai-plugins
 
-sh.o 개인 Claude Code 플러그인 카탈로그(마켓플레이스).
+oshyun 개인 Claude Code 플러그인 카탈로그(마켓플레이스).
 
 이 레포 하나가 **마켓플레이스 + 플러그인**을 함께 담는다.
 원격(GitHub/사내 GHE)에 push해 두면 어느 머신에서든 끌어다 쓴다.
@@ -8,9 +8,9 @@ sh.o 개인 Claude Code 플러그인 카탈로그(마켓플레이스).
 ## 구성
 
 ```
-.claude-plugin/marketplace.json     ← 카탈로그 (name: sh-plugins)
+.claude-plugin/marketplace.json     ← 카탈로그 (name: ai-plugins)
 plugins/
-  oshyun/                        ← 확장형 개인 플러그인
+  oshyun/                            ← 확장형 개인 플러그인
     .claude-plugin/plugin.json
     skills/
       dev-style/SKILL.md             ← 개발 습관·코딩 패턴·git 워크플로우
@@ -23,16 +23,16 @@ plugins/
 원격에 push한 뒤:
 
 ```
-/plugin marketplace add <owner>/claude-plugins      # GitHub 단축형
+/plugin marketplace add oshyun/ai-plugins              # GitHub 단축형
 # 또는
-/plugin marketplace add https://<host>/<owner>/claude-plugins.git
-/plugin install oshyun@sh-plugins
+/plugin marketplace add https://<host>/oshyun/ai-plugins.git
+/plugin install oshyun@ai-plugins
 ```
 
 업데이트(새 커밋 push 후):
 
 ```
-/plugin marketplace update sh-plugins
+/plugin marketplace update ai-plugins
 /plugin reload-plugins
 ```
 
@@ -42,8 +42,8 @@ plugins/
 ## 로컬에서 테스트 (push 전)
 
 ```
-/plugin marketplace add /home1/irteam/users/sh/repos/claude-plugins
-/plugin install oshyun@sh-plugins
+/plugin marketplace add /home1/irteam/users/sh/repos/ai-plugins
+/plugin install oshyun@ai-plugins
 /plugin reload-plugins
 ```
 

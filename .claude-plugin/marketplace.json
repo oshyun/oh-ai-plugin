@@ -1,6 +1,6 @@
 {
-  "name": "sh-plugins",
-  "description": "sh.o 개인 Claude Code 플러그인 카탈로그",
+  "name": "ai-plugins",
+  "description": "oshyun 개인 Claude Code 플러그인 카탈로그",
   "owner": {
     "name": "sh.o",
     "email": "sh.o@navercorp.com"
