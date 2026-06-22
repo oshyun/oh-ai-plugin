@@ -11,12 +11,16 @@ oshyun 개인 Claude Code 플러그인 카탈로그(마켓플레이스).
 .claude-plugin/marketplace.json     ← 카탈로그 (name: oshyun)
 plugins/
   oh-dev-guide/                         ← 확장형 개인 플러그인
-    .claude-plugin/plugin.json
+    .claude-plugin/plugin.json      ← version: YYYY.MM.DD.HH.mm.ss
     skills/
-      dev-style/SKILL.md             ← 개발 습관·코딩 패턴·git 워크플로우
+      coding-style/SKILL.md         ← 코드 작성 패턴·리뷰 기준
+      doc-style/SKILL.md            ← 문서·커밋 메시지 스타일
+      workflow-style/SKILL.md       ← git 워크플로우·에이전트 응답 스타일
+scripts/
+  bump-version.sh                   ← 버전 현재 시각으로 업데이트
 ```
 
-플러그인 이름이 스킬 네임스페이스가 된다 → 스킬 호출: `/oh-dev-guide:dev-style`.
+플러그인 이름이 스킬 네임스페이스가 된다 → 스킬 호출 예: `oh-dev-guide:workflow-style`.
 
 ## 설치 (각 머신에서 한 번)
 
@@ -31,20 +35,22 @@ plugins/
 
 업데이트(새 커밋 push 후):
 
-```
-/plugin marketplace update oshyun
-/plugin reload-plugins
+```bash
+./scripts/bump-version.sh           # plugin.json version 갱신 (push 전)
+# push 후:
+/plugin marketplace update oshyun   # GitHub fetch + 캐시 업데이트
+/reload-plugins                      # 현재 세션에 반영
 ```
 
-> `plugin.json`에 `version`을 두지 않아 **커밋 SHA가 버전**이다.
-> 즉 push할 때마다 새 버전이 되고, 위 두 명령이면 최신본이 반영된다.
+> `plugin.json`의 `version` 필드(YYYY.MM.DD.HH.mm.ss)가 캐시 디렉토리 이름이 된다.
+> 버전이 바뀌지 않으면 `marketplace update`가 캐시를 교체하지 않으므로 push 전에 반드시 bump한다.
 
 ## 로컬에서 테스트 (push 전)
 
 ```
 /plugin marketplace add /home1/irteam/users/sh/repos/ai-plugins
 /plugin install oh-dev-guide@oshyun
-/plugin reload-plugins
+/reload-plugins
 ```
 
 ## 검증
