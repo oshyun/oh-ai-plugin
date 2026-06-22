@@ -2,12 +2,17 @@
   "name": "oh-dev-guide",
   "displayName": "Oh Dev Guide",
   "description": "개인 개발 습관·코딩 패턴·git 워크플로우 가이드라인. 코드 작성·리뷰·리팩토링·커밋 시 적용.",
-  "version": "2026.06.23.02.52.06",
+  "version": "2026.06.23.03.01.04",
   "author": {
     "name": "sh.o",
     "email": "sh.o@navercorp.com"
   },
-  "keywords": ["coding-style", "guidelines", "git-workflow", "personal"],
+  "keywords": [
+    "coding-style",
+    "guidelines",
+    "git-workflow",
+    "personal"
+  ],
   "skills": [
     "./skills/coding-style",
     "./skills/doc-style",

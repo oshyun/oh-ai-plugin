@@ -3,7 +3,7 @@ name: workflow-style
 description: 개인 작업 스타일 전반 — git 워크플로우(worktree·커밋·머지·push)와 에이전트 응답 스타일(ETA·ASCII 박스·언어·검증). git 작업·커밋·배포·에이전트 자율 실행 시 적용한다. Personal workflow style: git workflow and agent interaction preferences.
 ---
 
-# Workflow Style
+# Workflow Style [TEST-MARKER-RELOAD-CHECK]
 
 ## A. git 작업: worktree 기반 (핵심)
 
