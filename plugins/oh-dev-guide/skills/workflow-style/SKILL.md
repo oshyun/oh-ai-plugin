@@ -13,12 +13,13 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 절차:
 
 1. **첫 편집 전에 worktree부터.** 반드시 `git fetch origin`으로 base를 최신화한 뒤 만든다.
-   - `git fetch origin && git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> origin/master`
+   - `git fetch origin && git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> origin/<기본브랜치>`
    - 경로는 **레포 한 단계 위**에 `../<레포명>-wt-<주제>` 형식으로 만든다. (예: `../fdc-bot-wt-auth-fix`)
+   - **기본 브랜치명은 레포마다 다르다.** `master` 또는 `main` 중 하나이므로 작업 전 `git remote show origin | grep 'HEAD branch'`로 확인한다.
 2. **`--no-track` 필수.** upstream이 `origin/master`로 잡히면 GUI의 pull/sync가 작업 커밋을 기본 브랜치로 직행 push할 수 있다(실제 사고 사례).
 3. **모든 Read/Edit는 worktree 경로에서.** 커밋은 `git add <개별 파일>`로 **내 파일만** — `git add -A`·`git add src/` 금지(다른 미커밋 작업이 휩쓸려 들어감).
-4. **rebase까지만 worktree에서.** 머지 단계(`checkout master`·`merge`·`push`·`worktree remove`)는 **main tree에서** 실행한다.
-   - worktree 안에서 `git checkout master`를 하면 `'master' is already used by worktree`로 실패하고, 체인이 끊기면 작업 브랜치가 원격에 잘못 push된다.
+4. **rebase까지만 worktree에서.** 머지 단계(`checkout <기본브랜치>`·`merge`·`push`·`worktree remove`)는 **main tree에서** 실행한다.
+   - worktree 안에서 기본 브랜치를 checkout하면 `'master(main)' is already used by worktree`로 실패하고, 체인이 끊기면 작업 브랜치가 원격에 잘못 push된다.
 5. **작업 디렉토리가 shallow면** 머지가 unrelated histories로 막힐 수 있다. `git fetch --unshallow origin`으로 복구.
 
 ## B. 커밋 · 머지 · push
@@ -28,11 +29,14 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   - 독립 단일 작업은 완료 즉시 push.
 - **커밋 메시지에 작성자 정보(`Co-Authored-By`) 미포함.** 기본값을 두지 말고 작업 내용을 한 줄로 적는다.
 - **기본 브랜치에 직접 커밋하지 않는다.** 작업은 작업 브랜치(`work/<주제>`)에서.
+- **작업 중 중간 rebase.** 작업이 길어지면 주기적으로 `git fetch origin`으로 기본 브랜치 업데이트를 확인한다.
+  - 새 커밋이 쌓였으면 `git rebase origin/<기본브랜치>`로 미리 올려 충돌을 조기에 해소한다.
+  - 충돌이 크면 사용자에게 알리고 함께 해결한다.
 - **머지 전 순서: rebase → 사용자 승인 → merge.** worktree 커밋 완료 후 아래 순서를 반드시 지킨다.
-  1. worktree에서 `git fetch origin && git rebase origin/master` — 최신 master 위로 올린다. (충돌 시에만 멈추고 알린다.)
+  1. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>` — 최신 기본 브랜치 위로 올린다. (충돌 시에만 멈추고 알린다.)
   2. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 명시적으로 받는다.
   3. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
-- **준선형(semi-linear) 머지.** `fetch → rebase origin/master`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
+- **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
   - 머지 직전 `git fetch`로 base 이후 다른 push(다른 세션 머지·CI bump 등)가 끼었는지 확인하고, 가라앉으면 그 위로 rebase 후 진행.
   - push가 거부되면(race) fetch→rebase→merge를 멈추지 말고 재시도해 원자적으로 반영한다. 충돌 때만 멈추고 알린다.
 - **코드 변경 작업을 마치면 simplify/cleanup 패스를 자동 실행** (조사성·질의성 작업엔 미적용).
