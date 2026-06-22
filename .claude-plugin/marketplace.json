@@ -1,5 +1,5 @@
 {
-  "name": "ai-plugins",
+  "name": "oshyun",
   "description": "oshyun 개인 Claude Code 플러그인 카탈로그",
   "owner": {
     "name": "sh.o",
@@ -7,8 +7,8 @@
   },
   "plugins": [
     {
-      "name": "oshyun",
-      "source": "./plugins/oshyun",
+      "name": "oh-plugin",
+      "source": "./plugins/oh-plugin",
       "description": "개인 개발 습관·코딩 패턴·git 워크플로우 가이드라인"
     }
   ]
