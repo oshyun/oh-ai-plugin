@@ -58,7 +58,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   ║  Merged  : work/<topic> -> <base-branch>             ║
   ║  Commit  : <sha7>  "<commit message>"                ║
   ║  Changed : <N> files  +<ins> -<del>                  ║
-  ║  Cleanup : worktree removed · branch deleted         ║
+  ║  Cleanup : ../<repo>-wt-<topic> removed · branch deleted ║
   ╚══════════════════════════════════════════════════════╝
   ```
 
