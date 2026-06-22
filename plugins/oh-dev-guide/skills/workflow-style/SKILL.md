@@ -3,7 +3,7 @@ name: workflow-style
 description: 개인 작업 스타일 전반 — git 워크플로우(worktree·커밋·머지·push)와 에이전트 응답 스타일(ETA·ASCII 박스·언어·검증). git 작업·커밋·배포·에이전트 자율 실행 시 적용한다. Personal workflow style: git workflow and agent interaction preferences.
 ---
 
-# Work Style
+# Workflow Style
 
 ## A. git 작업: worktree 기반 (핵심)
 
@@ -31,6 +31,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   - 머지 직전 `git fetch`로 base 이후 다른 push(다른 세션 머지·CI bump 등)가 끼었는지 확인하고, 가라앉으면 그 위로 rebase 후 진행.
   - push가 거부되면(race) fetch→rebase→merge를 멈추지 말고 재시도해 원자적으로 반영한다. 충돌 때만 멈추고 알린다.
 - **코드 변경 작업을 마치면 simplify/cleanup 패스를 자동 실행** (조사성·질의성 작업엔 미적용).
+- **prod 서비스 교체는 에이전트가 직접 실행하지 않는다.** 코드 변경·커밋·push까지 담당하고, 실제 서비스 교체(배포)는 사용자에게 제안에 그친다.
 
 ## C. 에이전트 응답 스타일
 
