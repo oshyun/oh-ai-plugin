@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-@agent.md
+@AGENTS.md
 
 ## 플러그인 업데이트 (push 후 세션 반영)
 
