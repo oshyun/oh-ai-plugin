@@ -1,4 +1,5 @@
 ---
+name: reload-oh-plugin
 description: oh-dev-guide 스킬을 현재 세션에 즉시 재로드한다. /reload-plugins 후 실행한다.
 ---
 
