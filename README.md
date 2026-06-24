@@ -21,7 +21,8 @@ scripts/
 ## 설치 (각 머신에서 한 번)
 
 ```
-/plugin install oshyun/oh-plugin
+/plugin marketplace add oshyun/oh-plugin
+/plugin install oh-plugin@oshyun
 /reload-plugins
 ```
 
@@ -30,7 +31,7 @@ scripts/
 ```bash
 bash scripts/bump-version.sh   # push 전 버전 bump
 # push 후:
-/plugin update oshyun/oh-plugin
+/plugin marketplace update oshyun
 /reload-plugins
 ```
 
@@ -40,7 +41,7 @@ bash scripts/bump-version.sh   # push 전 버전 bump
 ## 이미 열린 세션에서 즉시 반영
 
 ```
-/plugin update oshyun/oh-plugin
+/plugin marketplace update oshyun
 /reload-plugins
 /oh-reload
 ```
