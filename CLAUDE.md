@@ -24,13 +24,12 @@ bash scripts/bump-version.sh
 ### 이미 열린 세션에서 즉시 반영하려면
 
 SessionStart hook으로 주입된 규칙은 세션 재시작 없이 교체할 수 없다.
-대신 Skill을 on-demand로 로드해 덮어씌운다.
+대신 `reload` 커맨드로 두 스킬을 한 번에 재로드한다.
 
 ```
-/reload-plugins 후, agent에게 아래를 요청:
-"oh-dev-guide:workflow-style 스킬을 지금 로드해줘"
-"oh-dev-guide:coding-style 스킬을 지금 로드해줘"
+/reload-plugins
+/oh-dev-guide:reload
 ```
 
+- `/oh-dev-guide:reload`가 workflow-style과 coding-style을 순서대로 로드한다.
 - Skill 호출분이 컨텍스트에 추가되면 SessionStart 주입분보다 나중에 위치하므로 우선 적용된다.
-- 두 스킬 모두 변경했다면 둘 다 로드해야 한다.
