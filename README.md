@@ -27,6 +27,14 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 /oh-reload
 ```
 
+### 삭제
+
+```
+/plugin uninstall oh-plugin
+/plugin marketplace remove oshyun
+/reload-plugins
+```
+
 ---
 
 ## Copilot
@@ -48,6 +56,13 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 /plugin update oh-plugin
 /reload-plugins
 /oh-reload
+```
+
+### 삭제
+
+```
+/plugin uninstall oh-plugin
+/reload-plugins
 ```
 
 ---
