@@ -1,5 +1,5 @@
 ---
-name: coding-style
+name: oh-coding-style
 description: 개인 코딩 패턴·원칙·사고방식. 코드를 작성(write)·리뷰(review)·리팩토링(refactor)할 때 적용한다. Personal coding principles and patterns for writing, reviewing, or refactoring code.
 ---
 
