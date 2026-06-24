@@ -2,7 +2,7 @@
 # 플러그인 버전을 현재 YMD시분초로 업데이트
 set -euo pipefail
 
-PLUGIN_JSON="$(dirname "$0")/../plugins/oh-dev-guide/.claude-plugin/plugin.json"
+PLUGIN_JSON="$(dirname "$0")/../plugins/oh-plugin/.claude-plugin/plugin.json"
 NEW_VERSION="$(date +%Y.%m.%d.%H.%M.%S)"
 
 # jq 있으면 사용, 없으면 sed fallback
