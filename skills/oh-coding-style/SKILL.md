@@ -1,6 +1,9 @@
 ---
 name: oh-coding-style
-description: 개인 코딩 패턴·원칙·사고방식. 코드를 작성(write)·리뷰(review)·리팩토링(refactor)할 때 적용한다. Personal coding principles and patterns for writing, reviewing, or refactoring code.
+description: >-
+  코드 작성·리뷰·리팩토링 시 적용하는 개인 코딩 원칙.
+  단순함 우선·외과적 변경·기존 요소 재활용·아키텍처 영향 파악·즉시 이해 가능한 명명·SSOT·레거시 식별자 처리·코드 주석 태그(FIXME/REFAC/COMPAT/QUIRK) 시스템을 포함한다.
+  수정 범위가 클 때 surgical vs 구조 리팩토링 선택지를 사용자에게 제안하는 판단 기준도 포함한다.
 ---
 
 # Coding Style
