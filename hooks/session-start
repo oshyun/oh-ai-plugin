@@ -6,8 +6,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
-coding_style=$(cat "${PLUGIN_ROOT}/skills/coding-style/SKILL.md" 2>/dev/null || echo "")
-workflow_style=$(cat "${PLUGIN_ROOT}/skills/workflow-style/SKILL.md" 2>/dev/null || echo "")
+coding_style=$(cat "${PLUGIN_ROOT}/skills/oh-coding-style/SKILL.md" 2>/dev/null || echo "")
+workflow_style=$(cat "${PLUGIN_ROOT}/skills/oh-workflow-style/SKILL.md" 2>/dev/null || echo "")
 
 escape_for_json() {
     local s="$1"
