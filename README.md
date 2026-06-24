@@ -1,6 +1,7 @@
 # oh-plugin
 
-oshyun 개인 Claude Code 플러그인 카탈로그(마켓플레이스).
+oshyun 개인 AI 에이전트 플러그인.
+Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에이전트 도구에 공통 적용된다.
 
 이 레포 하나가 **마켓플레이스 + 플러그인**을 함께 담는다.
 원격(GitHub)에 push해 두면 어느 머신에서든 끌어다 쓴다.
