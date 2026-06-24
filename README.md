@@ -20,11 +20,22 @@ scripts/
 
 ## 설치 (각 머신에서 한 번)
 
+### Claude Code
+
 ```
 /plugin marketplace add oshyun/oh-plugin
 /plugin install oh-plugin@oshyun
 /reload-plugins
 ```
+
+### Copilot
+
+```
+/plugin install oh-plugin@oshyun
+/reload-plugins
+```
+
+> Copilot은 marketplace 등록 없이 바로 install 가능하다.
 
 ## 업데이트 (새 커밋 push 후)
 
