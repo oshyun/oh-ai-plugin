@@ -24,7 +24,7 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 ```
 /plugin marketplace update oshyun
 /reload-plugins
-/oh-reload
+/oh-plugin:oh-reload
 ```
 
 ### 삭제
@@ -55,7 +55,7 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 ```
 /plugin update oh-plugin
 /reload-plugins
-/oh-reload
+/oh-plugin:oh-reload
 ```
 
 ### 삭제
