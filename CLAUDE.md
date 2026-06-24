@@ -16,9 +16,18 @@ bash scripts/bump-version.sh
 
 ## 플러그인 업데이트 (push 후 세션 반영)
 
+**Claude Code:**
+
 ```
 /plugin marketplace update oshyun
 /reload-plugins
+/oh-plugin:oh-reload
+```
+
+**Copilot:**
+
+```
+/plugin update oh-plugin
 /oh-plugin:oh-reload
 ```
 
