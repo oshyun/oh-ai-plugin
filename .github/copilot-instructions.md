@@ -1,12 +1,11 @@
-# CLAUDE.md
+# copilot-instructions.md
 
 @agent.md
 
 ## 플러그인 업데이트 (push 후 세션 반영)
 
 ```
-/plugin marketplace update oshyun
-/reload-plugins
+/plugin update oh-plugin
 /oh-plugin:oh-reload
 ```
 
