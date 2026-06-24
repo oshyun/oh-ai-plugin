@@ -1,6 +1,9 @@
 ---
 name: oh-workflow-style
-description: "개인 작업 스타일 전반 — git 워크플로우(worktree·커밋·머지·push)와 에이전트 응답 스타일(ETA·ASCII 박스·언어·검증). git 작업·커밋·배포·에이전트 자율 실행 시 적용한다. Personal workflow style: git workflow and agent interaction preferences."
+description: >-
+  git 워크플로우와 에이전트 응답 스타일을 정의하는 개인 작업 원칙.
+  worktree 기반 브랜치 격리·rebase→승인→--no-ff 머지·준선형 히스토리 유지·커밋 단위와 push 타이밍 기준을 포함한다.
+  에이전트 자율 실행 시 ETA 제시·git 단계 완료 시 ASCII 박스 출력·한국어 응답·불확실한 사실 코드로 검증 등 응답 스타일 규칙도 포함한다.
 ---
 
 # Workflow Style
