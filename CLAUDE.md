@@ -17,16 +17,6 @@ bash scripts/bump-version.sh
 ```
 /plugin marketplace update oshyun
 /reload-plugins
-```
-
-### 이미 열린 세션에서 즉시 반영하려면
-
-SessionStart hook으로 주입된 규칙은 세션 재시작 없이 교체할 수 없다.
-대신 `oh-reload` 스킬로 두 스킬을 한 번에 재로드한다.
-
-```
-/plugin marketplace update oshyun
-/reload-plugins
 /oh-plugin:oh-reload
 ```
 
