@@ -36,7 +36,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   - 충돌이 크면 사용자에게 알리고 함께 해결한다.
 - **머지 전 순서: rebase → simplify → 사용자 승인 → merge.** worktree 커밋 완료 후 아래 순서를 반드시 지킨다.
   1. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>` — 최신 기본 브랜치 위로 올린다. (충돌 시에만 멈추고 알린다.)
-  2. worktree에서 simplify/cleanup 패스를 실행한다: 변경이 전체 코드에 미치는 영향을 조사하고, lint·formatter 등 도구를 실행하며, 불필요한 코드를 직접 검토해 제거한다. `/simplify` 명령을 사용할 수 있으면(Claude Code 등) 그것을 활용한다.
+  2. **`Skill` 도구에 `simplify`를 전달해 반드시 호출한다.** 직접 코드 검토로 대체하지 않는다.
   3. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 명시적으로 받는다.
   4. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
