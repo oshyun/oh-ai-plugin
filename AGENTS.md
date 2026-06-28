@@ -21,15 +21,15 @@ bash scripts/bump-version.sh
 ```
 /plugin marketplace update oshyun
 /reload-plugins
-/oh-plugin:oh-force
+/oh-plugin:oh-apply
 ```
 
 **Copilot:**
 
 ```
 /plugin update oh-plugin
-/oh-plugin:oh-force
+/oh-plugin:oh-apply
 ```
 
-- `/oh-plugin:oh-force`는 oh-workflow-style과 oh-coding-style을 현재 세션에 즉시 강제 적용한다.
+- `/oh-plugin:oh-apply`는 oh-workflow-style과 oh-coding-style을 현재 세션에 즉시 강제 적용한다.
 - Skill 호출분이 컨텍스트에 추가되면 SessionStart 주입분보다 나중에 위치하므로 우선 적용된다.
