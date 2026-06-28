@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-context='[oh-dev-guide] CRITICAL: 사용자에게 어떤 응답도 하기 전에 Skill 도구로 oh-plugin:oh-coding-style 스킬과 oh-plugin:oh-workflow-style 스킬을 반드시 즉시 호출하라. 예외 없다.'
+context='[oh-plugin] CRITICAL: 사용자에게 어떤 응답도 하기 전에 Skill 도구로 oh-plugin:oh-coding-style 스킬과 oh-plugin:oh-workflow-style 스킬을 반드시 즉시 호출하라. 예외 없다.'
 
 if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
     printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$context"
