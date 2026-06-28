@@ -15,7 +15,6 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 ```
 /plugin marketplace add oshyun/oh-plugin
 /plugin install oh-plugin@oshyun
-/reload-plugins
 /oh-plugin:oh-force
 ```
 
@@ -23,7 +22,6 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 
 ```
 /plugin marketplace update oshyun
-/reload-plugins
 /oh-plugin:oh-force
 ```
 
@@ -31,7 +29,6 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 
 ```
 /plugin marketplace remove oshyun
-/reload-plugins
 ```
 
 ---
