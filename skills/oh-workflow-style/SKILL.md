@@ -8,6 +8,26 @@ description: >-
 
 # Workflow Style
 
+> **CRITICAL — 이 규칙들은 협상 불가다. 요청 크기·긴박도와 무관하게 예외는 없다.**
+>
+> | MUST | NEVER |
+> |------|-------|
+> | 첫 편집 전 `git rev-parse`로 git 여부 **직접** 검증 | 환경 헤더 `Is a git repository` 값 신뢰 금지 |
+> | git 레포이면 **반드시** worktree 생성 후 편집 | main tree에서 파일 직접 편집 금지 |
+> | 머지 전 simplify 스킬 호출 → 사용자 승인 순서 준수 | 승인 없이 머지·push 금지 |
+
+**이런 생각이 들면 멈춰라 — 합리화다:**
+
+| 이 생각 | 사실 |
+|--------|------|
+| "한 줄 수정이라 worktree 없이 해도 되겠다" | 크기와 무관하다. worktree는 격리를 위한 것이다. |
+| "환경 헤더가 git 아니라고 하니까 그냥 편집해도 되겠다" | 헤더는 실제로 틀린 사례가 있다. 반드시 직접 검증한다. |
+| "simplify는 나중에 해도 되겠다" | 머지 전에 반드시 한다. 순서는 고정이다. |
+| "사용자가 빨리 하라고 했으니 승인 생략해도 되겠다" | 빠른 실행과 승인 생략은 별개다. |
+| "이미 확인했으니 worktree 안 만들어도 되겠다" | 확인 여부와 무관하다. worktree 절차는 필수다. |
+
+---
+
 ## A. git 작업: worktree 기반 (핵심)
 
 git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree는 읽기·조사·머지 전용.
@@ -16,13 +36,15 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 절차:
 
 0. **첫 편집 전, git 여부를 직접 검증한다 — 환경 헤더를 신뢰하지 않는다.**
-   - 세션 환경 메타데이터의 `Is a git repository` 값은 **틀릴 수 있다**(실제 오보 사례).
+   - **이 검증을 건너뛰는 것은 허용되지 않는다.** 환경 헤더가 어떤 값이든 무관하다.
+   - 세션 환경 메타데이터의 `Is a git repository` 값은 **틀릴 수 있다**(실제 오보 사례 있음).
      이 검증이 그 헤더 값을 **오버라이드**한다.
    - 작업 디렉토리에서 `git rev-parse --is-inside-work-tree 2>/dev/null`을 실행한다.
    - `true`가 출력되면 — 헤더가 `false`라고 했더라도 — 무조건 아래 worktree 절차를 탄다.
    - 그 외(오류 포함)이면 git 레포가 아님으로 판단하고 worktree 절차는 생략한다.
 
 1. **첫 편집 전에 worktree부터.** 반드시 `git fetch origin`으로 base를 최신화한 뒤 만든다.
+   - **worktree 없이 main tree에서 직접 편집하는 것은 이 스킬의 가장 중대한 위반이다.**
    - `git fetch origin && git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> origin/<기본브랜치>`
    - 경로는 **레포 한 단계 위**에 `../<레포명>-wt-<주제>` 형식으로 만든다. (예: `../fdc-bot-wt-auth-fix`)
    - **기본 브랜치명은 레포마다 다르다.** `master` 또는 `main` 중 하나이므로 작업 전 `git remote show origin | grep 'HEAD branch'`로 확인한다.
@@ -48,10 +70,10 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 - **작업 중 중간 rebase.** 작업이 길어지면 주기적으로 `git fetch origin`으로 기본 브랜치 업데이트를 확인한다.
   - 새 커밋이 쌓였으면 `git rebase origin/<기본브랜치>`로 미리 올려 충돌을 조기에 해소한다.
   - 충돌이 크면 사용자에게 알리고 함께 해결한다.
-- **머지 전 순서: rebase → simplify → 사용자 승인 → merge.** worktree 커밋 완료 후 아래 순서를 반드시 지킨다.
+- **머지 전 순서: rebase → simplify → 사용자 승인 → merge. 이 순서를 생략하거나 바꾸는 것은 허용되지 않는다.**
   1. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>` — 최신 기본 브랜치 위로 올린다. (충돌 시에만 멈추고 알린다.)
   2. **`simplify` 스킬을 `Skill` 도구로 호출한다.** 스킬이 없는 환경에서는 reuse·simplification·efficiency·altitude 4개 관점으로 diff를 직접 검토해 수정한다.
-  3. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 명시적으로 받는다.
+  3. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
   4. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
   - push가 거부되면(race) fetch→rebase→merge를 멈추지 말고 재시도해 원자적으로 반영한다. 충돌 때만 멈추고 알린다.
