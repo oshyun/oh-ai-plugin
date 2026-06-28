@@ -13,7 +13,7 @@ description: >-
 > | 첫 편집 전 `git rev-parse`로 git 여부 **직접** 검증 | 환경 헤더 `Is a git repository` 값 신뢰 금지 |
 > | git 레포이면 **반드시** worktree 생성 후 편집 | main tree에서 파일 직접 편집 금지 |
 > | 사소하지 않은 변경이면 빌드·테스트 전 simplify 실행 | 사소하지 않은 변경을 simplify 없이 진행 금지 |
-> | 머지 전 simplify 스킬 호출 → 사용자 승인 순서 준수 | 승인 없이 머지·push 금지 |
+> | 머지 전 simplify 스킬 호출 → 사용자 승인 순서 준수 | 승인 없이 머지 금지 (머지 = merge+push) |
 
 **이런 생각이 들면 멈춰라 — 합리화다:**
 
