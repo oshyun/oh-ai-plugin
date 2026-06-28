@@ -8,5 +8,5 @@ oh-workflow-style 스킬과 oh-coding-style 스킬을 순서대로 로드하라.
 
 ```
 oh-plugin 스킬 재로드 완료
-※ /reload-plugins 실행 또는 세션 재시작 시 시스템 프롬프트에 재주입됩니다.
+※ /reload-plugins는 플러그인 캐시만 갱신합니다. 시스템 프롬프트 주입은 세션 재시작 시 적용됩니다.
 ```
