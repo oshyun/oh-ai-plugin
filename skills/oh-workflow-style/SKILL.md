@@ -24,7 +24,6 @@ description: >-
 | "환경 헤더가 git 아니라고 하니까 그냥 편집해도 되겠다" | 헤더는 실제로 틀린 사례가 있다. 반드시 직접 검증한다. |
 | "simplify는 나중에 해도 되겠다" | 머지 전에 반드시 한다. 순서는 고정이다. |
 | "사용자가 빨리 하라고 했으니 승인 생략해도 되겠다" | 빠른 실행과 승인 생략은 별개다. |
-| "이미 확인했으니 worktree 안 만들어도 되겠다" | 확인 여부와 무관하다. worktree 절차는 필수다. |
 
 ---
 
@@ -36,7 +35,6 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 절차:
 
 0. **첫 편집 전, git 여부를 직접 검증한다 — 환경 헤더를 신뢰하지 않는다.**
-   - **이 검증을 건너뛰는 것은 허용되지 않는다.** 환경 헤더가 어떤 값이든 무관하다.
    - 세션 환경 메타데이터의 `Is a git repository` 값은 **틀릴 수 있다**(실제 오보 사례 있음).
      이 검증이 그 헤더 값을 **오버라이드**한다.
    - 작업 디렉토리에서 `git rev-parse --is-inside-work-tree 2>/dev/null`을 실행한다.
@@ -44,7 +42,6 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
    - 그 외(오류 포함)이면 git 레포가 아님으로 판단하고 worktree 절차는 생략한다.
 
 1. **첫 편집 전에 worktree부터.** 반드시 `git fetch origin`으로 base를 최신화한 뒤 만든다.
-   - **worktree 없이 main tree에서 직접 편집하는 것은 이 스킬의 가장 중대한 위반이다.**
    - `git fetch origin && git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> origin/<기본브랜치>`
    - 경로는 **레포 한 단계 위**에 `../<레포명>-wt-<주제>` 형식으로 만든다. (예: `../fdc-bot-wt-auth-fix`)
    - **기본 브랜치명은 레포마다 다르다.** `master` 또는 `main` 중 하나이므로 작업 전 `git remote show origin | grep 'HEAD branch'`로 확인한다.
