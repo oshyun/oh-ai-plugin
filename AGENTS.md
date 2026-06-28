@@ -20,6 +20,7 @@ bash scripts/bump-version.sh
 
 ```
 /plugin marketplace update oshyun
+/reload-plugins
 /oh-plugin:oh-force
 ```
 
