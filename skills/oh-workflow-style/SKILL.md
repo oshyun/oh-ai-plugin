@@ -1,9 +1,7 @@
 ---
 name: oh-workflow-style
 description: >-
-  git 작업(브랜치 생성·커밋·머지·push·배포)이나 에이전트가 자율적으로 작업을 수행할 때 반드시 적용한다.
-  또한 어떤 코드든 첫 편집을 시작하기 전에 로드해 git 저장소 여부를 직접 검증한다.
-  worktree 생성, 커밋 메시지 작성, rebase·머지 순서 결정, push 타이밍 판단, 작업 완료 후 응답 형식 결정 등 모든 git·배포 흐름에서 로드한다.
+  git 작업(브랜치·커밋·머지·push)·자율 작업·첫 코드 편집 전 반드시 로드한다. worktree, rebase, 머지 순서, push 타이밍 규칙 포함.
 ---
 
 # Workflow Style

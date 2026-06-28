@@ -3,7 +3,7 @@
 
 set -euo pipefail
 
-context='[oh-plugin] BLOCKING REQUIREMENT — 협상 불가, 예외 없음. 지금 즉시 Skill 도구로 oh-plugin:oh-coding-style 스킬과 oh-plugin:oh-workflow-style 스킬을 순서대로 호출하라. 사용자에게 단 한 글자도 응답하기 전에 두 스킬 모두 호출 완료해야 한다. "간단한 질문이니 건너뛰어도 된다", "이미 내용을 안다", "규칙이 기억난다" — 이 모든 생각은 합리화다. 선택권이 없다. 무조건 호출하라.'
+context='[oh-plugin] 이 세션에 oh-plugin이 활성화되어 있습니다. oh-plugin:oh-coding-style 스킬은 코드 작업(작성·수정·리뷰·리팩토링)에 적용되는 명명 규칙·변경 범위·SSOT 규칙을 담고 있습니다. oh-plugin:oh-workflow-style 스킬은 git 작업(worktree·커밋·머지·push)에 적용되는 워크플로우 규칙을 담고 있습니다. 코드 또는 git 작업 시작 전에 해당 스킬을 로드해야 합니다.'
 
 if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
     printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$context"
