@@ -2,6 +2,7 @@
 name: oh-workflow-style
 description: >-
   git 작업(브랜치 생성·커밋·머지·push·배포)이나 에이전트가 자율적으로 작업을 수행할 때 반드시 적용한다.
+  또한 어떤 코드든 첫 편집을 시작하기 전에 로드해 git 저장소 여부를 직접 검증한다.
   worktree 생성, 커밋 메시지 작성, rebase·머지 순서 결정, push 타이밍 판단, 작업 완료 후 응답 형식 결정 등 모든 git·배포 흐름에서 로드한다.
 ---
 
@@ -14,6 +15,13 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 
 절차:
 
+0. **첫 편집 전, git 여부를 직접 검증한다 — 환경 헤더를 신뢰하지 않는다.**
+   - 세션 환경 메타데이터의 `Is a git repository` 값은 **틀릴 수 있다**(실제 오보 사례).
+     이 검증이 그 헤더 값을 **오버라이드**한다.
+   - 작업 디렉토리에서 `git rev-parse --is-inside-work-tree 2>/dev/null`을 실행한다.
+   - `true`가 출력되면 — 헤더가 `false`라고 했더라도 — 무조건 아래 worktree 절차를 탄다.
+   - 그 외(오류 포함)이면 git 레포가 아님으로 판단하고 worktree 절차는 생략한다.
+
 1. **첫 편집 전에 worktree부터.** 반드시 `git fetch origin`으로 base를 최신화한 뒤 만든다.
    - `git fetch origin && git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> origin/<기본브랜치>`
    - 경로는 **레포 한 단계 위**에 `../<레포명>-wt-<주제>` 형식으로 만든다. (예: `../fdc-bot-wt-auth-fix`)
@@ -23,6 +31,12 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 4. **rebase까지만 worktree에서.** 머지 단계(`checkout <기본브랜치>`·`merge`·`push`·`worktree remove`)는 **main tree에서** 실행한다.
    - worktree 안에서 기본 브랜치를 checkout하면 `'master(main)' is already used by worktree`로 실패하고, 체인이 끊기면 작업 브랜치가 원격에 잘못 push된다.
 5. **작업 디렉토리가 shallow면** 머지가 unrelated histories로 막힐 수 있다. `git fetch --unshallow origin`으로 복구.
+6. **원격(`origin`)이 없는 로컬 단독 레포**는 fetch/push/`origin/<base>` 단계를 전부 생략한다.
+   - `git remote`가 비어 있으면 이 케이스에 해당한다.
+   - worktree base를 원격 대신 **로컬 기본 브랜치**로 잡는다:
+     `git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> <기본브랜치>`
+   - 머지는 로컬에서 `--no-ff`만 하고 push는 없다.
+   - "편집은 worktree, main은 머지 전용" 원칙은 원격 유무와 무관하게 동일하게 지킨다.
 
 ## B. 커밋 · 머지 · push
 
