@@ -1,33 +1,14 @@
 #!/usr/bin/env bash
-# SessionStart hook — injects coding-style and workflow-style rules into every session
+# SessionStart hook — oh-coding-style / oh-workflow-style 스킬을 즉시 호출하도록 지시한다.
 
 set -euo pipefail
 
-SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
-PLUGIN_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
-
-coding_style=$(cat "${PLUGIN_ROOT}/skills/oh-coding-style/SKILL.md" 2>/dev/null || echo "")
-workflow_style=$(cat "${PLUGIN_ROOT}/skills/oh-workflow-style/SKILL.md" 2>/dev/null || echo "")
-
-escape_for_json() {
-    local s="$1"
-    s="${s//\\/\\\\}"
-    s="${s//\"/\\\"}"
-    s="${s//$'\n'/\\n}"
-    s="${s//$'\r'/\\r}"
-    s="${s//$'\t'/\\t}"
-    printf '%s' "$s"
-}
-
-coding_escaped=$(escape_for_json "$coding_style")
-workflow_escaped=$(escape_for_json "$workflow_style")
-
-context="<IMPORTANT>\n[oh-dev-guide rules — always applied]\n\n${coding_escaped}\n\n---\n\n${workflow_escaped}\n</IMPORTANT>"
+context='[oh-dev-guide] CRITICAL: 사용자에게 어떤 응답도 하기 전에 Skill 도구로 oh-plugin:oh-coding-style 스킬과 oh-plugin:oh-workflow-style 스킬을 반드시 즉시 호출하라. 예외 없다.'
 
 if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ] && [ -z "${COPILOT_CLI:-}" ]; then
-    printf '{\n  "hookSpecificOutput": {\n    "hookEventName": "SessionStart",\n    "additionalContext": "%s"\n  }\n}\n' "$context"
+    printf '{"hookSpecificOutput":{"hookEventName":"SessionStart","additionalContext":"%s"}}\n' "$context"
 else
-    printf '{\n  "additionalContext": "%s"\n}\n' "$context"
+    printf '{"additionalContext":"%s"}\n' "$context"
 fi
 
 exit 0
