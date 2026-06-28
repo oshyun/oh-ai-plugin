@@ -73,7 +73,8 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   3. 변경사항을 커밋한다 — worktree 내 커밋이므로 승인 없이 진행한다.
   4. 빌드·테스트를 실행해 simplify 이후에도 동작이 정상임을 확인한다.
   5. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
-  6. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
+  6. 승인 후 main tree에서 `--no-ff` merge → push 진행.
+  7. push까지 성공적으로 완료된 것을 확인한 뒤 worktree를 삭제한다. merge가 완전히 끝나기 전에는 삭제하지 않는다 — 언제든 재시도할 수 있도록 보관한다.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
   - push가 거부되면(race) 그래프를 재구성한 뒤 push한다. 단순 재시도가 아니라 다음 순서를 완수해야 한다:
     1. main tree를 `git reset --hard origin/<기본브랜치>`로 원복한다.
