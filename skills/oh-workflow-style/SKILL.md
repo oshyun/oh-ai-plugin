@@ -13,7 +13,7 @@ description: >-
 > | 첫 편집 전 `git rev-parse`로 git 여부 **직접** 검증 | 환경 헤더 `Is a git repository` 값 신뢰 금지 |
 > | git 레포이면 **반드시** worktree 생성 후 편집 | main tree에서 파일 직접 편집 금지 |
 > | 사소하지 않은 변경이면 빌드·테스트 전 simplify 실행 | 사소하지 않은 변경을 simplify 없이 진행 금지 |
-> | 머지 전 simplify 스킬 호출 → 사용자 승인 순서 준수 | 승인 없이 머지·push 금지 |
+> | 머지 전 simplify 스킬 호출 → 사용자 승인 순서 준수 | 승인 없이 머지 금지 (머지 = merge+push) |
 
 **이런 생각이 들면 멈춰라 — 합리화다:**
 
@@ -73,9 +73,14 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   3. 변경사항을 커밋한다 — worktree 내 커밋이므로 승인 없이 진행한다.
   4. 빌드·테스트를 실행해 simplify 이후에도 동작이 정상임을 확인한다.
   5. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
-  6. 승인 후 main tree에서 `--no-ff` merge → push → worktree remove 진행.
+  6. 승인 후 main tree에서 `--no-ff` merge → push 진행.
+  7. push까지 성공적으로 완료된 것을 확인한 뒤 worktree를 삭제한다. merge가 완전히 끝나기 전에는 삭제하지 않는다 — 언제든 재시도할 수 있도록 보관한다.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
-  - push가 거부되면(race) fetch→rebase→merge를 멈추지 말고 재시도해 원자적으로 반영한다. 충돌 때만 멈추고 알린다.
+  - push가 거부되면(race) 그래프를 재구성한 뒤 push한다. 단순 재시도가 아니라 다음 순서를 완수해야 한다:
+    1. main tree를 `git reset --hard origin/<기본브랜치>`로 원복한다.
+    2. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>`로 작업 브랜치를 새 tip 위로 올린다. (충돌 시 멈추고 알린다.)
+    3. main tree로 돌아와 `git merge --no-ff work/<주제>` → `git push`한다.
+    4. 이 사이클을 push가 성공할 때까지 반복한다.
 - **커밋 전 사용자 가이드 영향 확인.** 기능·동작·구조가 바뀌면 README 등 사용자 가이드도 **같은 커밋**에 갱신한다.
   - API 변경 시 API 문서도 함께 업데이트.
 - **prod 서비스 교체는 에이전트가 직접 실행하지 않는다.** 코드 변경·커밋·push까지 담당하고, 실제 서비스 교체(배포)는 사용자에게 제안에 그친다.
