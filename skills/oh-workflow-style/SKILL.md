@@ -103,7 +103,17 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
     Merged  : work/<topic> -> <base-branch>
     Commit  : <sha7>  "<commit message>"
     Changed : <N> files  +<ins> -<del>
-    Cleanup : ../<repo>-wt-<topic> removed · branch deleted
+  ════════════════════════════════════════════════════════════
+  ```
+
+  cleanup 완료 (머지 박스 직후 출력):
+  ```
+  ════════════════════════════════════════════════════════════
+    Cleanup done
+  ────────────────────────────────────────────────────────────
+    Repo    : <owner>/<repo>
+    Worktree: ../<repo>-wt-<topic> removed
+    Branch  : work/<topic> deleted (local + remote)
   ════════════════════════════════════════════════════════════
   ```
 
