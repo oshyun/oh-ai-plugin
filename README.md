@@ -1,10 +1,11 @@
 # oh-plugin
 
 oshyun 개인 AI 에이전트 플러그인.
-Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에이전트 도구에 공통 적용된다.
+Claude Code, Cursor, opencode 등 에이전트 도구에 공통 적용된다.
 
-> 설치 후 새 세션을 열면 SessionStart 훅이 규칙을 시스템 프롬프트에 자동 주입한다.
-> `/oh-plugin:oh-apply`는 현재 세션에 스킬을 즉시 강제 적용한다. 새 세션이 더 효과적이다.
+> Claude Code / Copilot: 설치 후 새 세션을 열면 SessionStart 훅이 규칙을 시스템 프롬프트에 자동 주입한다. `/oh-plugin:oh-apply`는 현재 세션에 스킬을 즉시 강제 적용한다. 새 세션이 더 효과적다.
+>
+> opencode: `instructions` 필드로 규칙이 항상 시스템 프롬프트에 주입된다. 별도 적용 명령이 불필요하다.
 
 ---
 
@@ -57,6 +58,47 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 
 ---
 
+## opencode
+
+opencode는 플러그인 시스템 대신 `instructions` 필드로 규칙을 시스템 프롬프트에 직접 주입한다.
+`opencode/AGENTS.md`가 oh-coding-style + oh-workflow-style을 결합한 단일 파일이다.
+
+### 설치
+
+`~/.config/opencode/opencode.json`에 `instructions` 필드를 추가한다.
+
+로컬 파일 직접 참조:
+```json
+{
+  "instructions": ["/절대경로/oh-plugin/opencode/AGENTS.md"]
+}
+```
+
+또는 심볼릭 링크로 연결 (단일 출처 유지):
+```bash
+ln -sf ~/repos/oh-plugin/opencode/AGENTS.md ~/.config/opencode/AGENTS.md
+```
+
+```json
+{
+  "instructions": ["~/.config/opencode/AGENTS.md"]
+}
+```
+
+### 업데이트
+
+```bash
+cd ~/repos/oh-plugin && git pull
+```
+
+심볼릭 링크를 쓴 경우 pull만 하면 반영된다. opencode 재시작 후 적용된다.
+
+### 삭제
+
+`opencode.json`에서 `instructions` 필드를 제거한다.
+
+---
+
 ## 스킬 수동 호출
 
 ```
@@ -73,6 +115,8 @@ Claude Code, Cursor 등 superpowers 플러그인 시스템을 지원하는 에�
 
 ```
 .claude-plugin/plugin.json          ← 플러그인 메타 (version: YYYY.MM.DD.HH.mm.ss)
+opencode/
+  AGENTS.md                         ← opencode용 instructions (coding + workflow 결합)
 skills/
   oh-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
   oh-workflow-style/SKILL.md        ← git 워크플로우·에이전트 응답 스타일
