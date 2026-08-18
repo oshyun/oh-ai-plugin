@@ -56,6 +56,22 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
      `git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> <기본브랜치>`
    - 머지는 로컬에서 `--no-ff`만 하고 push는 없다.
    - "편집은 worktree, main은 머지 전용" 원칙은 원격 유무와 무관하게 동일하게 지킨다.
+7. **서브 worktree(중첩) 패턴.** 작업용 상위 worktree가 이미 특정 브랜치(예: `stage`)를 checkout 중일 때,
+   그 위에 하위 worktree로 작업 브랜치를 얹는 구조.
+   - 구조 예:
+     ```
+     my-repo            (master 브랜치)
+     my-repo-wt-stage   (stage 브랜치 checkout — 상시 작업 상위 worktree)
+     my-repo-wt-stage-task1 (stage 기반 작업 브랜치 — 실제 편집 장소)
+     ```
+   - 하위 worktree 생성: base는 상위 브랜치(`stage`)다.
+     `git worktree add --no-track -b work/<주제> ../<레포명>-wt-<상위>-<주제> <상위브랜치>`
+     (예: `git worktree add --no-track -b work/task1 ../my-repo-wt-stage-task1 stage`)
+   - Read/Edit·rebase·커밋은 하위 worktree에서 기존 규칙(개별 파일 add, `--no-track`)을 그대로 따른다.
+   - 머지 대상이 **상위 브랜치(`stage`)** 일 때: git은 한 브랜치를 한 worktree에서만 checkout하므로,
+     main tree에서 `stage`를 checkout하려다 `'stage' is already used by worktree`로 막힌다.
+     따라서 **`stage`를 checkout 중인 상위 worktree(`my-repo-wt-stage`)에서 `--no-ff` 머지**한다.
+   - 상위 worktree의 브랜치로 머지 후, 그 결과를 기본 브랜치(main/master)로 올리는 것은 별도 관리한다.
 
 ## B. 커밋 · 머지 · push
 
