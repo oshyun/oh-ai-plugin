@@ -83,14 +83,15 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 - **작업 중 중간 rebase.** 작업이 길어지면 주기적으로 `git fetch origin`으로 기본 브랜치 업데이트를 확인한다.
   - 새 커밋이 쌓였으면 `git rebase origin/<기본브랜치>`로 미리 올려 충돌을 조기에 해소한다.
   - 충돌이 크면 사용자에게 알리고 함께 해결한다.
-- **머지 전 순서: rebase → simplify → commit → 빌드·테스트 → 사용자 승인 → merge. 이 순서를 생략하거나 바꾸는 것은 허용되지 않는다.**
+- **머지 전 순서: rebase → simplify → code-review → commit → 빌드·테스트 → 사용자 승인 → merge. 이 순서를 생략하거나 바꾸는 것은 허용되지 않는다.**
   1. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>` — 최신 기본 브랜치 위로 올린다. (충돌 시에만 멈추고 알린다.)
   2. **`simplify` 스킬을 `Skill` 도구로 호출한다.** 오타·1-2줄 이하의 사소한 수정이면 생략할 수 있다. 스킬이 없는 환경에서는 reuse·simplification·efficiency·altitude 4개 관점으로 diff를 직접 검토해 수정한다.
-  3. 변경사항을 커밋한다 — worktree 내 커밋이므로 승인 없이 진행한다.
-  4. 빌드·테스트를 실행해 simplify 이후에도 동작이 정상임을 확인한다.
-  5. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
-  6. 승인 후 main tree에서 `--no-ff` merge → push 진행.
-  7. push까지 성공적으로 완료된 것을 확인한 뒤 worktree를 삭제한다. merge가 완전히 끝나기 전에는 삭제하지 않는다 — 언제든 재시도할 수 있도록 보관한다.
+  3. **`code-review` 스킬(또는 `/code-review`)을 호출한다.** 발견된 문제가 있으면 수정한다.
+  4. 변경사항을 커밋한다 — worktree 내 커밋이므로 승인 없이 진행한다.
+  5. 빌드·테스트를 실행해 simplify·code-review 이후에도 동작이 정상임을 확인한다.
+  6. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
+  7. 승인 후 main tree에서 `--no-ff` merge → push 진행.
+  8. push까지 성공적으로 완료된 것을 확인한 뒤 worktree를 삭제한다. merge가 완전히 끝나기 전에는 삭제하지 않는다 — 언제든 재시도할 수 있도록 보관한다.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
   - push가 거부되면(race) 그래프를 재구성한 뒤 push한다. 단순 재시도가 아니라 다음 순서를 완수해야 한다:
     1. main tree를 `git reset --hard origin/<기본브랜치>`로 원복한다.
