@@ -11,7 +11,7 @@ if command -v jq &>/dev/null; then
   jq --arg v "$NEW_VERSION" '.version = $v' "$PLUGIN_JSON" > "$tmp"
   mv "$tmp" "$PLUGIN_JSON"
 else
-  sed -i "s/\"version\": \"[0-9]*\"/\"version\": \"$NEW_VERSION\"/" "$PLUGIN_JSON"
+  sed -i "s/\"version\": \"[0-9.]*\"/\"version\": \"$NEW_VERSION\"/" "$PLUGIN_JSON"
 fi
 
 echo "Bumped to $NEW_VERSION"
