@@ -22,15 +22,10 @@ function configRoot(): string {
 
 export const STATE_FILE = join(configRoot(), "oh-plugin.json");
 
-// TUI 배지 렌더는 렌더마다 호출되므로 디스크 I/O를 반복하지 않도록,
-// 읽은 값은 캐시하고 writeState() 시점에만 갱신한다. server는 init에서 1회만
-// 읽으므로 캐시와 무관하다.
-let readCache: OhPluginState | undefined;
-
+// 매번 파일에서 읽는다. on/off는 TUI에서 수시로 바뀌는 런타임 상태이므로,
+// server가 매 시스템 프롬프트 구성 시점에 최신 값을 반영해야 해서 캐시하지 않는다.
+// 상태 파일은 2바이트 수준의 작은 JSON이라 디스크 읽기 비용은 무시할 수 있다.
 export function readState(): OhPluginState {
-  if (readCache) {
-    return readCache;
-  }
   try {
     const raw = readFileSync(STATE_FILE, "utf8");
     const parsed: unknown = JSON.parse(raw);
@@ -39,18 +34,15 @@ export function readState(): OhPluginState {
       parsed !== null &&
       typeof (parsed as { enabled?: unknown }).enabled === "boolean"
     ) {
-      readCache = { enabled: (parsed as { enabled: boolean }).enabled };
-      return readCache;
+      return { enabled: (parsed as { enabled: boolean }).enabled };
     }
   } catch {
     // 파일 없음 또는 손상 → 기본값
   }
-  readCache = { ...DEFAULT_STATE };
-  return readCache;
+  return { ...DEFAULT_STATE };
 }
 
 export function writeState(state: OhPluginState): void {
-  readCache = { ...state };
   mkdirSync(dirname(STATE_FILE), { recursive: true });
   writeFileSync(
     STATE_FILE,
