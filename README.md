@@ -94,7 +94,7 @@ opencode plugin @oshyun/oh-plugin@latest --global --force
 - **상태바 배지**: 사이드바 하단에 `[oh-plugin ON]` / `[oh-plugin OFF]` 표시
 
 on/off 상태는 `~/.config/opencode/oh-plugin.json`(`{ "enabled": boolean }`)에 저장되며,
-**다음 세션부터** 서버가 이 값을 읽어 규칙 주입 여부를 결정한다.
+server가 매 시스템 프롬프트 구성 시점에 이 값을 읽어 **토글 즉시 반영**한다.
 
 - **on** → 시스템 프롬프트에 규칙 주입
 - **off** → 시스템 프롬프트에 규칙 주입 안 함 (기본값: on)
