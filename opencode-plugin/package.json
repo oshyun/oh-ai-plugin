@@ -9,10 +9,14 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
+    },
+    "./tui": {
+      "import": "./src/tui.tsx"
     }
   },
   "files": [
-    "dist/"
+    "dist/",
+    "src/"
   ],
   "scripts": {
     "build": "tsup",
@@ -33,6 +37,9 @@
   "license": "UNLICENSED",
   "peerDependencies": {
     "@opencode-ai/plugin": ">=1.4.0"
+  },
+  "dependencies": {
+    "@opentui/solid": "^0.5.4"
   },
   "devDependencies": {
     "@opencode-ai/plugin": "^1.17.20",

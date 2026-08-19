@@ -85,6 +85,20 @@ opencode plugin @oshyun/oh-plugin@latest --global --force
 
 `opencode.json`의 `plugin[]`에서 `@oshyun/oh-plugin` 항목을 제거한다.
 
+### TUI 규칙 주입 on/off 토글
+
+`@oshyun/oh-plugin`은 server(주입) + tui(제어)로 구성된다. opencode TUI에서
+플러그인의 on/off를 즉시 토글할 수 있다.
+
+- **명령 팔레트**: `oh-plugin: 규칙 주입 켜기/끄기 토글` 실행
+- **상태바 배지**: 사이드바 하단에 `[oh-plugin ON]` / `[oh-plugin OFF]` 표시
+
+on/off 상태는 `~/.config/opencode/oh-plugin.json`(`{ "enabled": boolean }`)에 저장되며,
+**다음 세션부터** 서버가 이 값을 읽어 규칙 주입 여부를 결정한다.
+
+- **on** → 시스템 프롬프트에 규칙 주입
+- **off** → 시스템 프롬프트에 규칙 주입 안 함 (기본값: on)
+
 ---
 
 ## 스킬 수동 호출
@@ -106,7 +120,9 @@ opencode plugin @oshyun/oh-plugin@latest --global --force
 opencode/
   AGENTS.md                         ← 규칙 SSOT (coding + workflow 결합 단일 파일)
 opencode-plugin/                    ← opencode npm 플러그인 (@oshyun/oh-plugin)
-  src/index.ts                      ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입
+  src/index.ts                      ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입 (server)
+  src/tui.tsx                       ← TUI on/off 토글·상태바 배지 (소스 그대로 게시, 번들 제외)
+  src/state.ts                      ← on/off 상태 파일 공유 (server·tui 공용)
   dist/                             ← 빌드 산출물 (AGENTS.md 복사본 포함, git 제외)
 skills/
   oh-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
