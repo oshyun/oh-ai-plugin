@@ -1,0 +1,43 @@
+{
+  "name": "@oshyun/oh-plugin",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "opencode plugin that injects oh-plugin coding & workflow rules into the system prompt",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist/"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "opencode",
+    "opencode-plugin",
+    "plugin",
+    "coding-style",
+    "workflow"
+  ],
+  "author": {
+    "name": "oshyun",
+    "email": "osh218@gmail.com"
+  },
+  "license": "UNLICENSED",
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.4.0"
+  },
+  "devDependencies": {
+    "@opencode-ai/plugin": "^1.17.20",
+    "@types/node": "^20.0.0",
+    "tsup": "^8.5.1",
+    "typescript": "^5.8.2"
+  }
+}

@@ -1,0 +1,6 @@
+# build output
+dist/
+node_modules/
+
+# generated asset copy (produces from ../opencode/AGENTS.md at build time)
+AGENTS.md

@@ -5,7 +5,7 @@ Claude Code, Cursor, opencode 등 에이전트 도구에 공통 적용된다.
 
 > Claude Code / Copilot: 설치 후 새 세션을 열면 SessionStart 훅이 규칙을 시스템 프롬프트에 자동 주입한다. `/oh-plugin:oh-apply`는 현재 세션에 스킬을 즉시 강제 적용한다. 새 세션이 더 효과적다.
 >
-> opencode: `instructions` 필드로 규칙이 항상 시스템 프롬프트에 주입된다. 별도 적용 명령이 불필요하다.
+> opencode: npm 플러그인(`@oshyun/oh-plugin`)이 시스템 프롬프트 훅으로 규칙을 주입한다. 설치·업데이트·삭제를 npm으로 관리한다.
 
 ---
 
@@ -60,42 +60,30 @@ Claude Code, Cursor, opencode 등 에이전트 도구에 공통 적용된다.
 
 ## opencode
 
-opencode는 플러그인 시스템 대신 `instructions` 필드로 규칙을 시스템 프롬프트에 직접 주입한다.
-`opencode/AGENTS.md`가 oh-coding-style + oh-workflow-style을 결합한 단일 파일이다.
+opencode는 npm 플러그인(`@oshyun/oh-plugin`)으로 규칙을 시스템 프롬프트에 주입한다.
+[opencode/AGENTS.md](opencode/AGENTS.md)가 oh-coding-style + oh-workflow-style을 결합한 단일
+SSOT이고, 플러그인이 이를 빌드 타임에 번들해 훅으로 주입한다.
 
 ### 설치
 
-`~/.config/opencode/opencode.json`에 `instructions` 필드를 추가한다.
-
-로컬 파일 직접 참조:
-```json
-{
-  "instructions": ["/절대경로/oh-plugin/opencode/AGENTS.md"]
-}
-```
-
-또는 심볼릭 링크로 연결 (단일 출처 유지):
 ```bash
-ln -sf ~/repos/oh-plugin/opencode/AGENTS.md ~/.config/opencode/AGENTS.md
+opencode plugin @oshyun/oh-plugin@latest --global
 ```
 
-```json
-{
-  "instructions": ["~/.config/opencode/AGENTS.md"]
-}
-```
+`--global`은 `~/.config/opencode/opencode.json`의 `plugin[]`에 추가하고 npm에서 설치한다.
+opencode를 다시 시작하면 새 세션부터 규칙이 적용된다.
 
 ### 업데이트
 
-```bash
-cd ~/repos/oh-plugin && git pull
-```
+버전을 올린 뒤 npm에 배포되면, `--force`로 최신 버전을 다시 설치한다.
 
-심볼릭 링크를 쓴 경우 pull만 하면 반영된다. opencode 재시작 후 적용된다.
+```bash
+opencode plugin @oshyun/oh-plugin@latest --global --force
+```
 
 ### 삭제
 
-`opencode.json`에서 `instructions` 필드를 제거한다.
+`opencode.json`의 `plugin[]`에서 `@oshyun/oh-plugin` 항목을 제거한다.
 
 ---
 
@@ -114,16 +102,19 @@ cd ~/repos/oh-plugin && git pull
 ### 구성
 
 ```
-.claude-plugin/plugin.json          ← 플러그인 메타 (version: YYYY.MM.DD.HH.mm.ss)
+.claude-plugin/plugin.json          ← Claude 플러그인 메타 (version: semver 1.0.x)
 opencode/
-  AGENTS.md                         ← opencode용 instructions (coding + workflow 결합)
+  AGENTS.md                         ← 규칙 SSOT (coding + workflow 결합 단일 파일)
+opencode-plugin/                    ← opencode npm 플러그인 (@oshyun/oh-plugin)
+  src/index.ts                      ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입
+  dist/                             ← 빌드 산출물 (AGENTS.md 복사본 포함, git 제외)
 skills/
   oh-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
   oh-workflow-style/SKILL.md        ← git 워크플로우·에이전트 응답 스타일
   oh-apply/SKILL.md                ← 현재 세션에 스킬 강제 적용
 hooks/                              ← SessionStart 등 훅
 scripts/
-  bump-version.sh                   ← 버전 현재 시각으로 업데이트
+  bump-version.sh                   ← semver patch 자동 증가 (두 버전 필드 동기화)
 ```
 
 ### 확장 — 스킬/에이전트/훅 추가
@@ -134,11 +125,21 @@ scripts/
 
 ### 버전 bump 및 배포
 
-플러그인 수정 후 push 전:
+플러그인 수정 후 push 전에 semver patch를 자동 증가시킨다.
+`bump-version.sh`는 `.claude-plugin/plugin.json`과 `opencode-plugin/package.json`의
+버전 필드를 함께 올린다. (`1.0.0` → `1.0.1`)
 
 ```bash
 bash scripts/bump-version.sh
 ```
 
 > 버전이 바뀌지 않으면 캐시를 교체하지 않으므로 push 전에 반드시 bump한다.
+
+opencode npm 플러그인을 배포할 때는 버전 bump 후 빌드·publish한다.
+
+```bash
+cd opencode-plugin
+npm run build
+npm publish --access public
+```
 
