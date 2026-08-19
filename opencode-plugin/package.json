@@ -1,6 +1,6 @@
 {
   "name": "@oshyun/oh-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "description": "opencode plugin that injects oh-plugin coding & workflow rules into the system prompt",
   "main": "./dist/index.js",
