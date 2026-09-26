@@ -1,6 +1,6 @@
 {
   "name": "@oshyun/oh-plugin",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "type": "module",
   "description": "opencode plugin that injects oh-plugin coding & workflow rules into the system prompt",
   "main": "./dist/index.js",
@@ -19,7 +19,7 @@
     "src/"
   ],
   "scripts": {
-    "build": "tsup",
+    "build:dist": "tsup",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [
