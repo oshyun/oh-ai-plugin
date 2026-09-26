@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
 # 플러그인 버전을 semver patch 자동 증가로 업데이트 (예: 1.0.0 -> 1.0.1)
-# canonical source는 opencode-plugin/package.json 이다.
+# canonical source는 package.json 이다.
 # 이 값을 4개 파일(_version 필드의 단일 출처로)에 동일하게 기록한다:
 #   - plugin.json                           (.version) (AGY용)
 #   - .claude-plugin/plugin.json            (.version)
-#   - opencode-plugin/package.json          (.version)
-#   - opencode-plugin/package-lock.json     (루트 .version + .packages[""].version)
+#   - package.json                          (.version)
+#   - package-lock.json                     (루트 .version + .packages[""].version)
 # 버전이 유효 semver(MAJOR.MINOR.PATCH)가 아니면 1.0.0으로 초기화한다.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-PACKAGE_JSON="$ROOT/opencode-plugin/package.json"
-LOCK_JSON="$ROOT/opencode-plugin/package-lock.json"
+PACKAGE_JSON="$ROOT/package.json"
+LOCK_JSON="$ROOT/package-lock.json"
 CLAUDE_PLUGIN_JSON="$ROOT/.claude-plugin/plugin.json"
 AGY_PLUGIN_JSON="$ROOT/plugin.json"
 
