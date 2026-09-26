@@ -13,10 +13,14 @@ Claude Code, Cursor, opencode 등 에이전트 도구에 공통 적용된다.
 
 Antigravity 2.0 및 agy CLI에서 사용할 수 있도록 `plugin.json`과 `rules/AGENTS.md` 구조를 지원한다.
 
-### 설치 (심볼릭 링크)
+### 설치
 
-Antigravity는 플러그인 디렉토리를 로컬에서 바로 연결할 수 있다.
+**스토어 설치 (권장):**
+```bash
+agy plugin install oh-plugin@oshyun
+```
 
+**로컬 심볼릭 링크:**
 ```bash
 mkdir -p ~/.gemini/config/plugins
 ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
