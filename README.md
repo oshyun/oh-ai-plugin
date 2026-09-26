@@ -83,7 +83,7 @@ ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
 ## opencode
 
 opencode는 규칙을 시스템 프롬프트에 주입하는 플러그인을 제공한다.
-[opencode/AGENTS.md](opencode/AGENTS.md)가 oh-coding-style + oh-workflow-style을 결합한 단일
+[rules/AGENTS.md](rules/AGENTS.md)가 oh-coding-style + oh-workflow-style을 결합한 단일
 SSOT이고, 플러그인이 이를 빌드 타임에 번들해 훅으로 주입한다.
 
 ### 설치
@@ -140,9 +140,7 @@ server가 매 시스템 프롬프트 구성 시점에 이 값을 읽어 **토글
 ```
 plugin.json                         ← AGY 플러그인 메타 (version: semver 1.0.x)
 .claude-plugin/plugin.json          ← Claude 플러그인 메타 (version: semver 1.0.x)
-rules/AGENTS.md                     ← AGY 규칙 주입용 심볼릭 링크 (opencode/AGENTS.md 참조)
-opencode/
-  AGENTS.md                         ← 규칙 SSOT (coding + workflow 결합 단일 파일)
+rules/AGENTS.md                     ← 규칙 SSOT (coding + workflow 결합 단일 파일)
 package.json                        ← opencode 플러그인 설정
 src/
   index.ts                          ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입 (server)
