@@ -150,7 +150,9 @@ dist/                               ← 빌드 산출물 (AGENTS.md 복사본 �
 skills/
   oh-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
   oh-workflow-style/SKILL.md        ← git 워크플로우·에이전트 응답 스타일
-  oh-apply/SKILL.md                ← 현재 세션에 스킬 강제 적용
+  oh-apply/SKILL.md                 ← 현재 세션에 스킬 강제 적용
+  simplify/SKILL.md                 ← 코드 변경 전 단순화 및 정제 검토
+  code-review/SKILL.md              ← 머지 전 엣지 케이스 및 품질 최종 검토
 hooks/                              ← SessionStart 등 훅
 scripts/
   bump-version.sh                   ← semver patch 자동 증가 (여러 버전 필드 동기화)
