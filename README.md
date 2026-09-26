@@ -143,11 +143,12 @@ plugin.json                         ← AGY 플러그인 메타 (version: semver
 rules/AGENTS.md                     ← AGY 규칙 주입용 심볼릭 링크 (opencode/AGENTS.md 참조)
 opencode/
   AGENTS.md                         ← 규칙 SSOT (coding + workflow 결합 단일 파일)
-opencode-plugin/                    ← opencode npm 플러그인 (@oshyun/oh-plugin)
-  src/index.ts                      ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입 (server)
-  src/tui.tsx                       ← TUI on/off 토글·상태바 배지 (소스 그대로 게시, 번들 제외)
-  src/state.ts                      ← on/off 상태 파일 공유 (server·tui 공용)
-  dist/                             ← 빌드 산출물 (AGENTS.md 복사본 포함, git 제외)
+package.json                        ← opencode npm 플러그인 (@oshyun/oh-plugin) 설정
+src/
+  index.ts                          ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입 (server)
+  tui.tsx                           ← TUI on/off 토글·상태바 배지 (소스 그대로 게시, 번들 제외)
+  state.ts                          ← on/off 상태 파일 공유 (server·tui 공용)
+dist/                               ← 빌드 산출물 (AGENTS.md 복사본 포함, git 제외)
 skills/
   oh-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
   oh-workflow-style/SKILL.md        ← git 워크플로우·에이전트 응답 스타일
@@ -166,7 +167,7 @@ scripts/
 ### 버전 bump 및 배포
 
 플러그인 수정 후 push 전에 semver patch를 자동 증가시킨다.
-`bump-version.sh`는 `.claude-plugin/plugin.json`과 `opencode-plugin/package.json`의
+`bump-version.sh`는 `.claude-plugin/plugin.json`과 `package.json`의
 버전 필드를 함께 올린다. (`1.0.0` → `1.0.1`)
 
 ```bash
@@ -178,7 +179,6 @@ bash scripts/bump-version.sh
 opencode npm 플러그인을 배포할 때는 버전 bump 후 빌드·publish한다.
 
 ```bash
-cd opencode-plugin
 npm run build
 npm publish --access public
 ```
