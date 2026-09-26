@@ -9,6 +9,24 @@ Claude Code, Cursor, opencode 등 에이전트 도구에 공통 적용된다.
 
 ---
 
+## Antigravity (AGY)
+
+Antigravity 2.0 및 agy CLI에서 사용할 수 있도록 `plugin.json`과 `rules/AGENTS.md` 구조를 지원한다.
+
+### 설치 (심볼릭 링크)
+
+Antigravity는 플러그인 디렉토리를 로컬에서 바로 연결할 수 있다.
+
+```bash
+mkdir -p ~/.gemini/config/plugins
+ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
+```
+
+설치 후 플러그인은 기본적으로 자동 활성화되며, 규칙(`AGENTS.md`)과 스킬(`skills/`)이 자동으로 로드된다.
+명령어로 제어하려면 `agy plugin enable oh-plugin` 또는 `disable`을 사용한다.
+
+---
+
 ## Claude Code
 
 ### 설치
@@ -116,7 +134,9 @@ server가 매 시스템 프롬프트 구성 시점에 이 값을 읽어 **토글
 ### 구성
 
 ```
+plugin.json                         ← AGY 플러그인 메타 (version: semver 1.0.x)
 .claude-plugin/plugin.json          ← Claude 플러그인 메타 (version: semver 1.0.x)
+rules/AGENTS.md                     ← AGY 규칙 주입용 심볼릭 링크 (opencode/AGENTS.md 참조)
 opencode/
   AGENTS.md                         ← 규칙 SSOT (coding + workflow 결합 단일 파일)
 opencode-plugin/                    ← opencode npm 플러그인 (@oshyun/oh-plugin)
@@ -130,7 +150,7 @@ skills/
   oh-apply/SKILL.md                ← 현재 세션에 스킬 강제 적용
 hooks/                              ← SessionStart 등 훅
 scripts/
-  bump-version.sh                   ← semver patch 자동 증가 (두 버전 필드 동기화)
+  bump-version.sh                   ← semver patch 자동 증가 (여러 버전 필드 동기화)
 ```
 
 ### 확장 — 스킬/에이전트/훅 추가

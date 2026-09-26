@@ -12,10 +12,5 @@
     "guidelines",
     "git-workflow",
     "personal"
-  ],
-  "skills": [
-    "./skills/oh-coding-style",
-    "./skills/oh-workflow-style",
-    "./skills/oh-apply"
   ]
 }
