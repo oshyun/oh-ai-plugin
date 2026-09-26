@@ -1,5 +1,10 @@
 # oh-plugin 개발 가이드
 
+## 스킬 로드
+
+코드 작업(작성·수정·리뷰·리팩토링) 전 oh-plugin:oh-coding-style 스킬을 로드한다.
+git 작업(브랜치·커밋·머지·push)·첫 편집 전 oh-plugin:oh-workflow-style 스킬을 로드한다.
+
 ## 버전 관리
 
 플러그인 수정 후 반드시 버전을 bump한다.
