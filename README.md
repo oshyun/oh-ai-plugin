@@ -15,9 +15,9 @@ Antigravity 2.0 및 agy CLI에서 사용할 수 있도록 `plugin.json`과 `rule
 
 ### 설치
 
-**스토어 설치 (권장):**
+**Git URL 설치 (권장):**
 ```bash
-agy plugin install oh-plugin@oshyun
+agy plugin install https://github.com/oshyun/oh-plugin.git
 ```
 
 **로컬 심볼릭 링크:**
