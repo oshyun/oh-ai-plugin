@@ -9,9 +9,9 @@ export default defineConfig({
   clean: true,
   sourcemap: true,
   async onSuccess() {
-    // 저장소 SSOT(AGENTS.md)를 dist/로 복사해 npm 패키지에 번들한다.
+    // 저장소 SSOT(content/AGENTS.md)를 dist/로 복사해 npm 패키지에 번들한다.
     // clean: true가 dist를 지운 뒤 실행되므로 산출물이 보존된다.
     mkdirSync("dist", { recursive: true });
-    cpSync("AGENTS.md", "dist/AGENTS.md");
+    cpSync("content/AGENTS.md", "dist/AGENTS.md");
   },
 });
