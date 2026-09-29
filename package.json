@@ -1,6 +1,6 @@
 {
   "name": "@oshyun/oh-ai-plugin",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "type": "module",
   "description": "opencode plugin that injects oh-ai-plugin coding & workflow rules into the system prompt",
   "main": "./dist/index.js",
