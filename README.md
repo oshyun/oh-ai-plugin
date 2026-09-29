@@ -1,17 +1,28 @@
 # oh-plugin
 
 oshyun 개인 AI 에이전트 플러그인.
-Claude Code, Cursor, opencode 등 에이전트 도구에 공통 적용된다.
+Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 적용된다.
 
-> Claude Code / Copilot: 설치 후 새 세션을 열면 SessionStart 훅이 규칙을 시스템 프롬프트에 자동 주입한다. `/oh-plugin:oh-apply`는 현재 세션에 스킬을 즉시 강제 적용한다. 새 세션이 더 효과적다.
->
-> opencode: npm 플러그인(`@oshyun/oh-plugin`)이 시스템 프롬프트 훅으로 규칙을 주입한다. 설치·업데이트·삭제를 npm으로 관리한다.
+규칙 본문은 [AGENTS.md](AGENTS.md)(oh-coding-style + oh-workflow-style 결합 단일 SSOT)이며,
+엔진마다 이를 세션에 반영하는 방식이 다르다.
+
+| 엔진 | 주입 방식 | 적용 시점 |
+|------|-----------|-----------|
+| Claude Code | SessionStart 훅이 스킬 로드를 지시 → 스킬이 규칙 적재 | 새 세션 자동 / 진행 세션은 `/oh-plugin:oh-apply` |
+| Copilot | Claude Code와 동일한 훅, Copilot용 출력 형식 | 새 세션 자동 / 진행 세션은 `/oh-plugin:oh-apply` |
+| opencode | 플러그인이 매 요청마다 시스템 프롬프트에 규칙 전문 직접 주입 | 새 세션 자동 / TUI 토글로 on/off |
+| Antigravity | `plugin.json` + `AGENTS.md`를 AGY가 자동 로드 | 새 세션 자동 |
 
 ---
 
 ## Antigravity (AGY)
 
-Antigravity 2.0 및 agy CLI에서 사용할 수 있도록 `plugin.json`과 루트 `AGENTS.md` 구조를 지원한다.
+### 동작 방식
+
+- `plugin.json`(플러그인 메타)과 루트 `AGENTS.md`(규칙 SSOT) 구조를 AGY가 읽어
+  규칙과 스킬(`skills/`)을 자동으로 로드한다.
+- 별도 훅이나 스킬 호출 없이 새 세션부터 규칙이 적용된다.
+- 플러그인은 설치 후 기본 활성화되며, `agy plugin enable oh-plugin` / `disable`로 제어한다.
 
 ### 설치
 
@@ -26,12 +37,23 @@ mkdir -p ~/.gemini/config/plugins
 ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
 ```
 
-설치 후 플러그인은 기본적으로 자동 활성화되며, 규칙(`AGENTS.md`)과 스킬(`skills/`)이 자동으로 로드된다.
-명령어로 제어하려면 `agy plugin enable oh-plugin` 또는 `disable`을 사용한다.
+심볼릭 링크로 설치한 경우 로컬 저장소에서 `git pull`만 하면 다음 세션부터 반영된다.
 
 ---
 
 ## Claude Code
+
+### 동작 방식
+
+- SessionStart 훅(`hooks/hooks.json` — 세션 시작·clear·compact 시점)이
+  "코드/git 작업 전에 oh-coding-style·oh-workflow-style 스킬을 로드하라"는 지시문을 컨텍스트에 추가한다.
+- 규칙 본문은 스킬 파일(`skills/oh-coding-style`, `skills/oh-workflow-style`)이 담고 있고,
+  Claude가 지시문을 보고 작업 전에 스킬을 읽는 2단계 구조다.
+- 따라서 규칙은 **새 세션부터 자동 적용**된다.
+- 세션 도중 플러그인을 업데이트하면 reload가 스킬·훅 정의를 갱신하지만
+  이미 진행 중인 세션의 컨텍스트는 그대로다. 이때 `/oh-plugin:oh-apply`를 실행하면
+  최신 스킬을 현재 세션에 즉시 적재할 수 있다.
+  적재된 스킬은 SessionStart 지시문보다 컨텍스트 뒤에 위치하므로 우선 적용된다.
 
 ### 설치
 
@@ -43,7 +65,9 @@ ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
 
 ### 업데이트
 
-`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동으로 reload한다.
+`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload한다.
+진행 중인 세션에 새 규칙을 즉시 반영하려면 `/oh-plugin:oh-apply`를 실행한다.
+세션을 새로 열면 훅 주입부터 최신 상태가 적용된다.
 
 ```
 /plugin marketplace update oshyun
@@ -59,6 +83,14 @@ ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
 ---
 
 ## Copilot
+
+### 동작 방식
+
+- Claude Code와 동일한 SessionStart 훅 구조를 쓴다.
+  훅 스크립트(`hooks/session-start`)는 `COPILOT_CLI` 환경변수로 Copilot 여부를 감지해,
+  Copilot이 요구하는 형식(`additionalContext`)으로 같은 지시문을 출력한다.
+- 규칙 본문은 스킬이 담고 있으며, **새 세션부터 자동 적용**된다.
+- 세션 도중 업데이트를 반영하려면 `/oh-plugin:oh-apply`를 실행한다.
 
 ### 설치
 
@@ -84,9 +116,16 @@ ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
 
 ## opencode
 
-opencode는 규칙을 시스템 프롬프트에 주입하는 플러그인을 제공한다.
-[AGENTS.md](AGENTS.md)가 oh-coding-style + oh-workflow-style을 결합한 단일
-SSOT이고, 플러그인이 이를 빌드 타임에 번들해 훅으로 주입한다.
+### 동작 방식
+
+- 플러그인 server(`src/index.ts`)가 `experimental.chat.system.transform` 훅으로
+  **매 요청마다** 시스템 프롬프트에 규칙 전문을 직접 push한다.
+  규칙 본문은 빌드 시점에 `content/AGENTS.md`가 `dist/AGENTS.md`로 번들된 것이다.
+- 스킬 로드라는 2단계를 거치지 않고 규칙이 항상 시스템 프롬프트에 존재하므로
+  `/oh-plugin:oh-apply`가 필요 없다.
+- 이미 규칙이 주입돼 있으면 헤더 마커(`Coding & Workflow Style`)로 중복 주입을 막는다.
+- TUI에서 규칙 주입을 즉시 on/off할 수 있다(아래 토글 참고).
+  on/off 상태를 매 요청 시점에 읽으므로 토글이 즉시 반영된다.
 
 ### 설치
 
@@ -100,6 +139,7 @@ opencode를 다시 시작하면 새 세션부터 규칙이 적용된다.
 ### 업데이트
 
 저장소가 업데이트된 경우, 동일한 명령어를 `--force`와 함께 실행하여 다시 설치한다.
+설치만으로는 진행 세션에 반영되지 않으므로 opencode를 재시작해 새 세션을 연다.
 
 ```bash
 opencode plugin github:oshyun/oh-plugin --global --force
@@ -111,7 +151,7 @@ opencode plugin github:oshyun/oh-plugin --global --force
 
 ### TUI 규칙 주입 on/off 토글
 
-`@oshyun/oh-plugin`은 server(주입) + tui(제어)로 구성된다. opencode TUI에서
+플러그인은 server(주입) + tui(제어)로 구성된다. opencode TUI에서
 플러그인의 on/off를 즉시 토글할 수 있다.
 
 - **명령 팔레트**: `oh-plugin: 규칙 주입 켜기/끄기 토글` 실행
