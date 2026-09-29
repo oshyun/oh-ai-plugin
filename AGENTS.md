@@ -36,13 +36,6 @@ bash scripts/bump-version.sh
 /oh-plugin:oh-apply
 ```
 
-**Antigravity (agy):**
-
-```
-/plugin update oh-plugin
-/oh-plugin:oh-apply
-```
-
 **opencode:**
 
 ```
