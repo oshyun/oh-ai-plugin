@@ -35,24 +35,14 @@ oh-plugin의 규칙 본문(348줄)은 [content/AGENTS.md](content/AGENTS.md) 한
   플러그인 디렉토리의 표준 파일을 직접 읽는다.
 - 설치되면 AGY가 `plugin.json`(이름·버전 메타)을 확인하고,
   루트 `AGENTS.md`(규칙 SSOT)와 `skills/`를 자동으로 로드한다.
-- 그래서 별도 훅이나 스킬 호출 없이 새 세션부터 규칙이 적용되며,
-  심볼릭 링크 설치라면 파일이 바뀌는 대로 다음 세션에 반영된다.
+- 그래서 별도 훅이나 스킬 호출 없이 새 세션부터 규칙이 적용된다.
 - 플러그인은 설치 후 기본 활성화되며, `agy plugin enable oh-plugin` / `disable`로 제어한다.
 
 ### 설치
 
-**Git URL 설치 (권장):**
 ```bash
 agy plugin install https://github.com/oshyun/oh-plugin.git
 ```
-
-**로컬 심볼릭 링크:**
-```bash
-mkdir -p ~/.gemini/config/plugins
-ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
-```
-
-심볼릭 링크로 설치한 경우 로컬 저장소에서 `git pull`만 하면 다음 세션부터 반영된다.
 
 ---
 
