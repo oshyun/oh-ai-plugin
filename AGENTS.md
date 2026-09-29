@@ -1,9 +1,9 @@
-# oh-plugin 개발 가이드
+# oh-ai-plugin 개발 가이드
 
 ## 스킬 로드
 
-코드 작업(작성·수정·리뷰·리팩토링) 전 oh-plugin:oh-coding-style 스킬을 로드한다.
-git 작업(브랜치·커밋·머지·push)·첫 편집 전 oh-plugin:oh-workflow-style 스킬을 로드한다.
+코드 작업(작성·수정·리뷰·리팩토링) 전 oh-ai-plugin:ohai-coding-style 스킬을 로드한다.
+git 작업(브랜치·커밋·머지·push)·첫 편집 전 oh-ai-plugin:ohai-workflow-style 스킬을 로드한다.
 
 ## 버전 관리
 
@@ -25,7 +25,7 @@ bash scripts/bump-version.sh
 
 ```
 /plugin marketplace update oshyun
-/oh-plugin:oh-apply
+/oh-ai-plugin:ohai-apply
 ```
 
 `/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload하므로 별도 reload 명령이 필요 없다.
@@ -33,16 +33,16 @@ bash scripts/bump-version.sh
 **Copilot:**
 
 ```
-/plugin update oh-plugin
-/oh-plugin:oh-apply
+/plugin update oh-ai-plugin
+/oh-ai-plugin:ohai-apply
 ```
 
 **opencode:**
 
 ```
-/plugin update oh-plugin
+/plugin update oh-ai-plugin
 ```
 
-- `/oh-plugin:oh-apply`는 oh-workflow-style과 oh-coding-style을 현재 세션에 즉시 강제 적용한다.
+- `/oh-ai-plugin:ohai-apply`는 ohai-workflow-style과 ohai-coding-style을 현재 세션에 즉시 강제 적용한다.
 - Skill 호출분이 컨텍스트에 추가되면 SessionStart 주입분보다 나중에 위치하므로 우선 적용된다.
 - opencode는 `instructions` 필드로 항상 주입되므로 별도 적용 명령이 불필요하다.

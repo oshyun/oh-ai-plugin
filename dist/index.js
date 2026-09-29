@@ -10,7 +10,7 @@ var DEFAULT_STATE = { enabled: true };
 function configRoot() {
   return process.env.XDG_CONFIG_HOME ? join(process.env.XDG_CONFIG_HOME, "opencode") : join(homedir(), ".config", "opencode");
 }
-var STATE_FILE = join(configRoot(), "oh-plugin.json");
+var STATE_FILE = join(configRoot(), "oh-ai-plugin.json");
 function readState() {
   try {
     const raw = readFileSync(STATE_FILE, "utf8");
@@ -40,7 +40,7 @@ var server = async () => {
     }
   };
 };
-var plugin = { id: "oh-plugin", server };
+var plugin = { id: "oh-ai-plugin", server };
 var index_default = plugin;
 export {
   index_default as default

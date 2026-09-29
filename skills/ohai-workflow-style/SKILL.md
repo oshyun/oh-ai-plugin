@@ -1,5 +1,5 @@
 ---
-name: oh-workflow-style
+name: ohai-workflow-style
 description: >-
   git 작업(브랜치·커밋·머지·push)·자율 작업·첫 코드 편집 전 반드시 로드한다. worktree, rebase, 머지 순서, push 타이밍 규칙 포함.
 ---
