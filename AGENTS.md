@@ -38,11 +38,9 @@ bash scripts/bump-version.sh
 
 **opencode:**
 
-```bash
-cd ~/repos/oh-plugin && git pull
 ```
-
-심볼릭 링크로 연결된 경우 pull만 하면 반영된다. opencode 재시작 후 적용된다.
+/plugin update oh-plugin
+```
 
 - `/oh-plugin:oh-apply`는 oh-workflow-style과 oh-coding-style을 현재 세션에 즉시 강제 적용한다.
 - Skill 호출분이 컨텍스트에 추가되면 SessionStart 주입분보다 나중에 위치하므로 우선 적용된다.
