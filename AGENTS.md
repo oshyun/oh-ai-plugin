@@ -25,9 +25,10 @@ bash scripts/bump-version.sh
 
 ```
 /plugin marketplace update oshyun
-/reload-plugins
 /oh-plugin:oh-apply
 ```
+
+`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload하므로 별도 reload 명령이 필요 없다.
 
 **Copilot:**
 

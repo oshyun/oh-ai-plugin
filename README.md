@@ -43,6 +43,8 @@ ln -s ~/repos/oh-plugin ~/.gemini/config/plugins/oh-plugin
 
 ### 업데이트
 
+`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동으로 reload한다.
+
 ```
 /plugin marketplace update oshyun
 /oh-plugin:oh-apply
