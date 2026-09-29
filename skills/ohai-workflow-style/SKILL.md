@@ -85,8 +85,8 @@ git이 있는 모든 환경에서 유의미한 편집은 **worktree에서** 한�
   - 새 커밋이 쌓였으면 `git rebase origin/<기본브랜치>`로 미리 올려 충돌을 조기에 해소한다.
 - **머지/PR 전 필수 점검 순서:** 
   1. rebase 또는 base 업데이트
-  2. **diff 검토:** `simplify` 스킬이 있으면 우선 호출하고, 없다면 자체적으로(reuse·simplification·efficiency·altitude) diff를 리뷰해 수정한다. (사소한 수정은 생략 가능)
-  3. **코드 리뷰:** `code-review` 스킬이 있으면 우선 호출하고, 없다면 내장 지침에 따라 잠재적 버그와 엣지 케이스를 자체 검토한다.
+  2. **자체 diff 리뷰 (Simplify):** 변경사항을 재사용성(Reuse), 단순성(Simplification), 효율성(Efficiency), 아키텍처 부합성(Altitude) 관점에서 자체 검토하고 필요시 수정한다. (사소한 수정은 생략 가능)
+  3. **코드 품질 및 엣지 케이스 검토 (Code Review):** `ohai-coding-style`(명명 규칙, SSOT 등) 준수 여부와 잠재적 버그, 엣지 케이스를 확인하고 수정한다.
   4. 커밋 및 빌드·테스트 통과 확인
 - **프로젝트 환경에 따른 머지/PR 전략 분기:**
   - **오픈소스 / 팀 프로젝트 / PR 필수 환경 (권장):**
