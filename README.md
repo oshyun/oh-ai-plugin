@@ -180,7 +180,7 @@ Claude Code·Copilot의 "훅 → 스킬" 2단계와 달리, opencode는 플러�
 opencode plugin github:oshyun/oh-ai-plugin --global
 ```
 
-`--global`은 `~/.config/opencode/opencode.json`의 `plugin[]`에 추가하고 설치한다.
+`--global`은 `~/.config/opencode/opencode.json` (또는 `.jsonc`)의 `plugin[]`에 추가하고 설치한다.
 opencode를 다시 시작하면 새 세션부터 규칙이 적용된다.
 
 ### 업데이트
@@ -194,7 +194,7 @@ opencode plugin github:oshyun/oh-ai-plugin --global --force
 
 ### 삭제
 
-`opencode.json`의 `plugin[]`에서 `github:oshyun/oh-ai-plugin` 항목을 제거한다.
+`opencode.json` (또는 `opencode.jsonc`)의 `plugin[]`에서 `github:oshyun/oh-ai-plugin` 항목을 제거한다.
 
 ### TUI 규칙 주입 on/off 토글
 
