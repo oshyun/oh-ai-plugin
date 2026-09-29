@@ -153,8 +153,8 @@ REMOVE-WHEN에 "언제 그 지원이 불필요해지는가"를 구체적으로 �
 > |------|-------|
 > | 첫 편집 전 `git rev-parse`로 git 여부 **직접** 검증 | 환경 헤더 `Is a git repository` 값 신뢰 금지 |
 > | git 레포이면 **반드시** worktree 생성 후 편집 | main tree에서 파일 직접 편집 금지 |
-> | 사소하지 않은 변경이면 빌드·테스트 전 diff 검토(또는 simplify) 실행 | 사소하지 않은 변경을 diff 검토 없이 진행 금지 |
-> | 머지 전 diff 검토(또는 simplify) → 사용자 승인 순서 준수 | 승인 없이 머지 금지 (머지 = merge+push) |
+> | 사소하지 않은 변경이면 빌드·테스트 전 diff 검토 실행 | 사소하지 않은 변경을 diff 검토 없이 진행 금지 |
+> | 머지 전 diff 검토 → 사용자 승인 순서 준수 | 승인 없이 머지 금지 (머지 = merge+push) |
 
 **이런 생각이 들면 멈춰라 — 합리화다:**
 
@@ -222,10 +222,10 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 - **작업 중 중간 rebase.** 작업이 길어지면 주기적으로 `git fetch origin`으로 기본 브랜치 업데이트를 확인한다.
   - 새 커밋이 쌓였으면 `git rebase origin/<기본브랜치>`로 미리 올려 충돌을 조기에 해소한다.
   - 충돌이 크면 사용자에게 알리고 함께 해결한다.
-- **머지 전 순서: rebase → diff 검토(또는 simplify) → code-review → commit → 빌드·테스트 → 사용자 승인 → merge. 이 순서를 생략하거나 바꾸는 것은 허용되지 않는다.**
+- **머지 전 순서: rebase → diff 검토 → code-review → commit → 빌드·테스트 → 사용자 승인 → merge. 이 순서를 생략하거나 바꾸는 것은 허용되지 않는다.**
   1. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>` — 최신 기본 브랜치 위로 올린다. (충돌 시에만 멈추고 알린다.)
-  2. **diff를 검토하거나 `simplify` 스킬을 호출한다.** 스킬이 지원되는 환경(Claude 등)에서는 `simplify` 스킬을 호출하고, 지원되지 않는 환경(opencode 등)에서는 4가지 관점(reuse·simplification·efficiency·altitude)으로 diff를 직접 검토해 수정한다. 오타·1-2줄 이하의 사소한 수정이면 생략할 수 있다.
-  3. **`code-review` 스킬(또는 직접 리뷰)을 호출한다.** 발견된 문제가 있으면 수정한다.
+  2. **diff를 reuse·simplification·efficiency·altitude 4개 관점으로 검토해 수정한다.** 오타·1-2줄 이하의 사소한 수정이면 생략할 수 있다.
+  3. **`code-review` 스킬(또는 `/code-review`)을 호출한다.** 발견된 문제가 있으면 수정한다.
   4. 변경사항을 커밋한다 — worktree 내 커밋이므로 승인 없이 진행한다.
   5. 빌드·테스트를 실행해 diff 검토·code-review 이후에도 동작이 정상임을 확인한다.
   6. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
@@ -244,7 +244,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
 ### C. 에이전트 응답 스타일
 
 - **자율(오토) 모드 전 예상 소요 시간 제시.** 자율 실행 직전 ETA를 먼저 보여준다.
-- **git 단계 완료 시 ASCII 박스 시그니처.** worktree 생성·rebase·diff 검토(또는 simplify)·commit·빌드 통과·머지·dev 배포 완료 시 아래 형식의 박스를 출력한다.
+- **git 단계 완료 시 ASCII 박스 시그니처.** worktree 생성·rebase·diff 검토·commit·빌드 통과·머지·dev 배포 완료 시 아래 형식의 박스를 출력한다.
   - 내용은 **ASCII만** — 한글·이모지·`→`(더블폭) 금지. 화살표는 `->`. 모든 줄을 같은 폭으로 패딩.
   - **prod 배포는 사용자가 직접** 실행하므로 박스 대상이 아니다. git 단계(worktree·머지·dev 배포)만.
   - 라벨은 **대문자**로 시작하고 콜론(`:`)으로 정렬한다.
@@ -296,10 +296,10 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   ════════════════════════════════════════════════════════════
   ```
 
-  diff 검토(또는 simplify) 완료:
+  diff 검토 완료:
   ```
   ════════════════════════════════════════════════════════════
-    Diff review (or Simplify) done
+    Diff review done
   ────────────────────────────────────────────────────────────
     Repo    : <owner>/<repo>
     Branch  : work/<topic>

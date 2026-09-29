@@ -7,7 +7,7 @@
   },
   "plugins": [
     {
-      "name": "oh-plugin",
+      "name": "oh-ai-plugin",
       "source": "./",
       "description": "개인 개발 습관·코딩 패턴·git 워크플로우 가이드라인"
     }

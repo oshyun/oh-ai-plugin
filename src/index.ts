@@ -32,5 +32,5 @@ const server: Plugin = async () => {
 
 // id: 경로(file://) 기반으로 로드될 때 opencode가 요구하는 필수 필드.
 // npm 스펙(@scope/pkg)으로 로드될 때는 선택이지만, 양쪽 모두 안전하게 지정한다.
-const plugin: PluginModule = { id: "oh-plugin", server };
+const plugin: PluginModule = { id: "oh-ai-plugin", server };
 export default plugin;

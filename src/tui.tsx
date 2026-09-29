@@ -16,8 +16,8 @@ const tui: TuiPluginModule["tui"] = async (api) => {
   // server는 매 시스템 프롬프트 구성 시점에 상태를 읽어 즉시 반영한다.
   api.command?.register(() => [
     {
-      title: "oh-plugin: 규칙 주입 켜기/끄기 토글",
-      value: "oh-plugin.toggle",
+      title: "oh-ai-plugin: 규칙 주입 켜기/끄기 토글",
+      value: "oh-ai-plugin.toggle",
       suggested: true,
       onSelect: () => {
         const next = !readState().enabled;
@@ -26,8 +26,8 @@ const tui: TuiPluginModule["tui"] = async (api) => {
         api.ui.toast({
           variant: next ? "success" : "warning",
           message: next
-            ? "oh-plugin 규칙 주입 켬 — 다음 시스템 프롬프트 구성부터 적용됩니다"
-            : "oh-plugin 규칙 주입 끔 — 다음 시스템 프롬프트 구성부터 미적용됩니다",
+            ? "oh-ai-plugin 규칙 주입 켬 — 다음 시스템 프롬프트 구성부터 적용됩니다"
+            : "oh-ai-plugin 규칙 주입 끔 — 다음 시스템 프롬프트 구성부터 미적용됩니다",
         });
       },
     },
@@ -40,12 +40,12 @@ const tui: TuiPluginModule["tui"] = async (api) => {
     slots: {
       sidebar_footer: () =>
         enabled() ? (
-          <text attributes={TextAttributes.BOLD}>[oh-plugin ON]</text>
+          <text attributes={TextAttributes.BOLD}>[oh-ai-plugin ON]</text>
         ) : (
-          <text attributes={TextAttributes.DIM}>[oh-plugin OFF]</text>
+          <text attributes={TextAttributes.DIM}>[oh-ai-plugin OFF]</text>
         ),
     },
   });
 };
 
-export default { id: "oh-plugin", tui } satisfies TuiPluginModule;
+export default { id: "oh-ai-plugin", tui } satisfies TuiPluginModule;

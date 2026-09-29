@@ -1,5 +1,5 @@
 ---
-name: oh-coding-style
+name: ohai-coding-style
 description: >-
   코드 작성·수정·리뷰·리팩토링 모든 작업에서 로드한다. 명명 규칙, 변경 범위 제한, SSOT, 주석 기준을 제공한다.
 ---
