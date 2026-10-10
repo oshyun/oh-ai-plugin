@@ -155,6 +155,7 @@ REMOVE-WHEN에 "언제 그 지원이 불필요해지는가"를 구체적으로 �
 > | git 레포이면 **반드시** worktree 생성 후 편집 | main tree에서 파일 직접 편집 금지 |
 > | 사소하지 않은 변경이면 빌드·테스트 전 diff 검토 실행 | 사소하지 않은 변경을 diff 검토 없이 진행 금지 |
 > | 머지 전 diff 검토 → 사용자 승인 순서 준수 | 승인 없이 머지 금지 (머지 = merge+push) |
+> | 머지 시 rebase 체크와 머지를 하나의 명령어로 원자적 실행 | rebase 체크 없이 머지하거나 체크와 머지 분리 실행 금지 |
 
 **이런 생각이 들면 멈춰라 — 합리화다:**
 
@@ -165,6 +166,7 @@ REMOVE-WHEN에 "언제 그 지원이 불필요해지는가"를 구체적으로 �
 | "이건 간단한 수정이라 diff 검토 생략해도 되겠다" | 오타·1-2줄 이하 수정만 생략 가능하다. 확신이 없으면 실행한다. |
 | "diff 검토는 나중에 해도 되겠다" | 빌드·테스트 전과 머지 전, 두 시점 모두 고정이다. |
 | "사용자가 빨리 하라고 했으니 승인 생략해도 되겠다" | 빠른 실행과 승인 생략은 별개다. |
+| "아까 rebase 했으니 지금 바로 머지해도 되겠다" | 베이스는 그 사이 바뀔 수 있다("그땐 맞고 지금은 틀리다"). 머지 직전 rebase 체크를 항상 함께 실행한다. |
 
 ### A. git 작업: worktree 기반 (핵심)
 
@@ -193,7 +195,7 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
    - `git remote`가 비어 있으면 이 케이스에 해당한다.
    - worktree base를 원격 대신 **로컬 기본 브랜치**로 잡는다:
      `git worktree add --no-track -b work/<주제> ../<레포명>-wt-<주제> <기본브랜치>`
-   - 머지는 로컬에서 `--no-ff`만 하고 push는 없다.
+   - 머지는 로컬에서 rebase 체크와 함께 원자적으로 실행하고 push는 없다: `git merge-base --is-ancestor <기본브랜치> work/<주제> && git merge --no-ff work/<주제>`
    - "편집은 worktree, main은 머지 전용" 원칙은 원격 유무와 무관하게 동일하게 지킨다.
 7. **서브 worktree(중첩) 패턴.** 작업용 상위 worktree가 이미 특정 브랜치(예: `stage`)를 checkout 중일 때,
    그 위에 하위 worktree로 작업 브랜치를 얹는 구조.
@@ -209,7 +211,8 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
    - Read/Edit·rebase·커밋은 하위 worktree에서 기존 규칙(개별 파일 add, `--no-track`)을 그대로 따른다.
    - 머지 대상이 **상위 브랜치(`stage`)** 일 때: git은 한 브랜치를 한 worktree에서만 checkout하므로,
      main tree에서 `stage`를 checkout하려다 `'stage' is already used by worktree`로 막힌다.
-     따라서 **`stage`를 checkout 중인 상위 worktree(`my-repo-wt-stage`)에서 `--no-ff` 머지**한다.
+     따라서 **`stage`를 checkout 중인 상위 worktree(`my-repo-wt-stage`)에서 rebase 체크와 함께 원자적으로 머지**한다:
+     `git merge-base --is-ancestor <상위브랜치> work/<주제> && git merge --no-ff work/<주제>`
    - 상위 worktree의 브랜치로 머지 후, 그 결과를 기본 브랜치(main/master)로 올리는 것은 별도 관리한다.
 
 ### B. 커밋 · 머지 · push
@@ -229,13 +232,16 @@ git이 있는 모든 환경에서 **편집은 worktree에서** 한다. main tree
   4. 변경사항을 커밋한다 — worktree 내 커밋이므로 승인 없이 진행한다.
   5. 빌드·테스트를 실행해 diff 검토·code-review 이후에도 동작이 정상임을 확인한다.
   6. 변경 요약(무엇을 바꿨는지)을 사용자에게 보여주고 머지 승인을 **명시적으로** 받는다. 사용자가 응답하기 전까지 머지하지 않는다.
-  7. 승인 후 main tree에서 `--no-ff` merge → push 진행.
+  7. 승인 후 main tree에서 **rebase 체크와 머지·push를 하나의 명령어로 원자적으로 실행**한다:
+     `git fetch origin && git merge-base --is-ancestor origin/<기본브랜치> work/<주제> && git merge --no-ff work/<주제> && git push`
+     - rebase 체크(`merge-base --is-ancestor`)와 머지 명령어를 단일 라인으로 그룹화해 원자적으로 실행한다.
+     - 1번 시점과 승인 시점 간 베이스 불일치("그땐 맞고 지금은 틀린" 케이스)를 원천 차단한다. 원격에 새 커밋이 추가되었거나 작업 브랜치가 최신 베이스 위에 있지 않으면 머지 자체가 실행되지 않고 실패한다.
   8. push까지 성공적으로 완료된 것을 확인한 뒤 worktree를 삭제한다. merge가 완전히 끝나기 전에는 삭제하지 않는다 — 언제든 재시도할 수 있도록 보관한다.
 - **준선형(semi-linear) 머지.** `fetch → rebase origin/<기본브랜치>`로 ff 가능 상태를 만든 뒤, 일부러 `--no-ff` 머지로 작업 경계를 남긴다.
-  - push가 거부되면(race) 그래프를 재구성한 뒤 push한다. 단순 재시도가 아니라 다음 순서를 완수해야 한다:
-    1. main tree를 `git reset --hard origin/<기본브랜치>`로 원복한다.
-    2. worktree에서 `git fetch origin && git rebase origin/<기본브랜치>`로 작업 브랜치를 새 tip 위로 올린다. (충돌 시 멈추고 알린다.)
-    3. main tree로 돌아와 `git merge --no-ff work/<주제>` → `git push`한다.
+  - rebase 체크 실패 또는 push 거부(race) 시 그래프를 재구성한 뒤 재시도한다:
+    1. rebase 체크 실패 시(머지 커밋 미생성): main tree 원복 없이 바로 worktree에서 `git fetch origin && git rebase origin/<기본브랜치>`로 작업 브랜치를 새 tip 위로 올린다. (충돌 시 멈추고 알린다.)
+    2. push 거부 시(머지 커밋 생성됨): main tree를 `git reset --hard origin/<기본브랜치>`로 원복한 뒤, worktree에서 `git fetch origin && git rebase origin/<기본브랜치>`로 작업 브랜치를 새 tip 위로 올린다. (충돌 시 멈추고 알린다.)
+    3. main tree로 돌아와 원자적 머지 명령어(`git fetch origin && git merge-base --is-ancestor origin/<기본브랜치> work/<주제> && git merge --no-ff work/<주제> && git push`)를 다시 실행한다.
     4. 이 사이클을 push가 성공할 때까지 반복한다.
 - **커밋 전 사용자 가이드 영향 확인.** 기능·동작·구조가 바뀌면 README 등 사용자 가이드도 **같은 커밋**에 갱신한다.
   - API 변경 시 API 문서도 함께 업데이트.
