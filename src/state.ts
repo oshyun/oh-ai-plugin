@@ -4,7 +4,7 @@ import { homedir } from "node:os";
 
 // oh-ai-plugin 상태(on/off)를 TUI와 server가 공유하기 위한 단일 파일 규약.
 // opencode는 api.kv가 TUI 전용이라 server가 못 읽으므로, 공용 JSON 파일로 전달한다.
-// server: init 시 readState().enabled 로 주입 여부 판단
+// server: 매 시스템 프롬프트 구성 시 readState().enabled 로 주입 여부 판단
 // tui:    토글/표시 시 readState()/writeState() 사용
 
 export type OhAiPluginState = {
