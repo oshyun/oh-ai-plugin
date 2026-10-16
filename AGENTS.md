@@ -5,6 +5,15 @@
 코드 작업(작성·수정·리뷰·리팩토링) 전 oh-ai-plugin:ohai-coding-style 스킬을 로드한다.
 git 작업(브랜치·커밋·머지·push)·첫 편집 전 oh-ai-plugin:ohai-workflow-style 스킬을 로드한다.
 
+## 규칙 수정
+
+규칙 SSOT는 `skills/ohai-coding-style/SKILL.md`, `skills/ohai-workflow-style/SKILL.md`다.
+SKILL.md를 수정하면 빌드해서 opencode용 `dist/AGENTS.md`를 다시 생성하고 같은 커밋에 포함한다.
+
+```bash
+npm ci && npm run build:dist
+```
+
 ## 버전 관리
 
 플러그인 수정 후 반드시 버전을 bump한다.
