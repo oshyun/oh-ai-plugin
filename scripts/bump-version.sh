@@ -30,18 +30,20 @@ current="$(sed -n 's/.*"version"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' "$P
 new="$(bump "$current")"
 echo "package.json: $current -> $new"
 
-if command -v jq &>/dev/null; then
-  # plugin.json, package.json: .version
-  for file in "$CLAUDE_PLUGIN_JSON" "$AGY_PLUGIN_JSON" "$PACKAGE_JSON"; do
-    tmp="$(mktemp)"
-    jq --arg v "$new" '.version = $v' "$file" > "$tmp"
-    mv "$tmp" "$file"
-  done
-  # package-lock.json: 루트 .version + .packages[""].version
-  tmp="$(mktemp)"
-  jq --arg v "$new" '.version = $v | .packages[""].version = $v' "$LOCK_JSON" > "$tmp"
-  mv "$tmp" "$LOCK_JSON"
-else
-  # sed fallback: 루트 version 교체 (lockfile은 루트+packages 두 지점이라 jq 권장)
-  sed -i "s/\"version\": \"[^\"]*\"/\"version\": \"$new\"/" "$CLAUDE_PLUGIN_JSON" "$AGY_PLUGIN_JSON" "$PACKAGE_JSON"
+# lockfile은 루트와 packages[""] 두 지점을 갱신해야 해서 sed로는 안전하게 처리할 수 없다.
+# jq 없이 일부 파일만 갱신되면 버전이 어긋나므로, 아무것도 바꾸지 않고 실패한다.
+if ! command -v jq &>/dev/null; then
+  echo "bump-version.sh: jq가 필요합니다" >&2
+  exit 1
 fi
+
+# plugin.json, package.json: .version
+for file in "$CLAUDE_PLUGIN_JSON" "$AGY_PLUGIN_JSON" "$PACKAGE_JSON"; do
+  tmp="$(mktemp)"
+  jq --arg v "$new" '.version = $v' "$file" > "$tmp"
+  mv "$tmp" "$file"
+done
+# package-lock.json: 루트 .version + .packages[""].version
+tmp="$(mktemp)"
+jq --arg v "$new" '.version = $v | .packages[""].version = $v' "$LOCK_JSON" > "$tmp"
+mv "$tmp" "$LOCK_JSON"

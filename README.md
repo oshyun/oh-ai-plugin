@@ -3,7 +3,7 @@
 oshyun 개인 AI 에이전트 플러그인.
 Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 적용된다.
 
-규칙 본문은 [AGENTS.md](AGENTS.md)(ohai-coding-style + ohai-workflow-style 결합 단일 SSOT)이며,
+규칙 본문은 [ohai-coding-style](skills/ohai-coding-style/SKILL.md) + [ohai-workflow-style](skills/ohai-workflow-style/SKILL.md) 두 스킬(SSOT)이며,
 엔진마다 이를 세션에 반영하는 방식이 다르다.
 
 | 엔진 | 주입 방식 | 적용 시점 |
@@ -11,7 +11,7 @@ Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 �
 | Claude Code | SessionStart 훅이 스킬 로드를 지시 → 스킬이 규칙 적재 | 새 세션 자동 / 진행 세션은 `/oh-ai-plugin:ohai-apply` |
 | Copilot | Claude Code와 동일한 훅, Copilot용 출력 형식 | 새 세션 자동 / 진행 세션은 `/oh-ai-plugin:ohai-apply` |
 | opencode | 플러그인이 매 요청마다 시스템 프롬프트에 규칙 전문 직접 주입 | 새 세션 자동 / TUI 토글로 on/off |
-| Antigravity | `plugin.json` + `AGENTS.md`를 AGY가 자동 로드 | 새 세션 자동 |
+| Antigravity | `plugin.json` + `skills/`를 AGY가 자동 로드 | 새 세션 자동 |
 
 ### 먼저 알아둘 개념
 
@@ -21,8 +21,8 @@ Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 �
 - **훅(hook)**: 엔진이 특정 시점(세션 시작 등)에 외부 스크립트를 실행하고, 그 출력을 모델 컨텍스트에 추가하는 장치.
 - **스킬(skill)**: 마크다운으로 된 지침 파일. 모델이 필요할 때 읽어서 적용한다. 규칙 전문을 한 번에 다 넣지 않고 필요한 시점에 로드해 컨텍스트를 절약한다.
 
-oh-ai-plugin의 규칙 본문(348줄)은 [content/AGENTS.md](content/AGENTS.md) 한 파일(SSOT)에 있고,
-엔진별로 "이 파일을 어떤 통로로 언제 모델 앞에 두느냐"만 다르다. 아래 섹션은 서로 독립적이라
+oh-ai-plugin의 규칙 본문은 `skills/`의 두 SKILL.md(SSOT)에 있고,
+엔진별로 "이 규칙을 어떤 통로로 언제 모델 앞에 두느냐"만 다르다. 아래 섹션은 서로 독립적이라
 쓰는 엔진 것만 읽으면 된다.
 
 ---
@@ -34,7 +34,8 @@ oh-ai-plugin의 규칙 본문(348줄)은 [content/AGENTS.md](content/AGENTS.md) 
 - AGY는 훅이나 플러그인 코드가 규칙을 주입하는 방식이 아니라,
   플러그인 디렉토리의 표준 파일을 직접 읽는다.
 - 설치되면 AGY가 `plugin.json`(이름·버전 메타)을 확인하고,
-  루트 `AGENTS.md`(규칙 SSOT)와 `skills/`를 자동으로 로드한다.
+  `skills/`를 자동으로 로드한다.
+- 루트 `AGENTS.md`는 규칙 본문이 아니라 이 레포 자체의 개발 가이드다.
 - 그래서 별도 훅이나 스킬 호출 없이 새 세션부터 규칙이 적용된다.
 - 플러그인은 설치 후 기본 활성화되며, `agy plugin enable oh-ai-plugin` / `disable`로 제어한다.
 
@@ -68,7 +69,7 @@ agy plugin install https://github.com/oshyun/oh-ai-plugin.git
 4. **컨텍스트 추가** → Claude Code가 `additionalContext` 값을 모델 컨텍스트에 넣는다.
    규칙 전문이 아니라 "어떤 스킬을 언제 읽어라"는 지시문이라는 점이 핵심이다.
 5. **스킬 로드** → 모델이 실제로 코드·git 작업을 시작하려는 시점에
-   `skills/ohai-coding-style/SKILL.md`(150줄), `skills/ohai-workflow-style/SKILL.md`(209줄)를 읽는다.
+   `skills/ohai-coding-style/SKILL.md`, `skills/ohai-workflow-style/SKILL.md`를 읽는다.
    이때 규칙 본문이 처음으로 컨텍스트에 적재된다.
 
 즉 "훅이 지시문을 심고, 스킬이 본문을 실어 나르는" 2단계 구조다.
@@ -157,8 +158,8 @@ Claude Code와 같은 훅·스킬 2단계 구조를 쓰되, 훅 출력 형식만
 Claude Code·Copilot의 "훅 → 스킬" 2단계와 달리, opencode는 플러그인이 규칙 전문을 직접 밀어넣는다.
 
 1. **플러그인 로드** → opencode가 시작될 때 설치된 플러그인(`dist/index.js`)을 읽어 들인다.
-2. **규칙 사전 적재** → 플러그인 초기화 시점에 `dist/AGENTS.md`(348줄)를 한 번 읽어 메모리에 보관한다.
-   이 파일은 빌드 때 `content/AGENTS.md`(SSOT)에서 복사된 것이므로 소스와 항상 같다.
+2. **규칙 사전 적재** → 플러그인 초기화 시점에 `dist/AGENTS.md`를 한 번 읽어 메모리에 보관한다.
+   이 파일은 빌드 때 두 SKILL.md(SSOT)를 결합해 생성한 것이므로 스킬과 항상 같다.
 3. **매 요청 주입** → 사용자가 메시지를 보낼 때마다 `experimental.chat.system.transform` 훅이 실행되고,
    플러그인이 그 시점에 시스템 프롬프트 배열 끝에 규칙 전문을 push한다.
 4. **중복 방지** → 시스템 프롬프트에 이미 규칙이 있으면(헤더 마커 `Coding & Workflow Style` 검사) 다시 넣지 않는다.
@@ -229,20 +230,17 @@ server가 매 시스템 프롬프트 구성 시점에 이 값을 읽어 **토글
 ```
 plugin.json                         ← AGY 플러그인 메타 (version: semver 1.0.x)
 .claude-plugin/plugin.json          ← Claude 플러그인 메타 (version: semver 1.0.x)
-AGENTS.md                           ← 규칙 SSOT (coding + workflow 결합 단일 파일)
-.agents/rules/oh-ai-plugin-dev.md      ← oh-ai-plugin 자체 개발용 가이드
+AGENTS.md                           ← oh-ai-plugin 자체 개발용 가이드
 package.json                        ← opencode 플러그인 설정
 src/
   index.ts                          ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입 (server)
   tui.tsx                           ← TUI on/off 토글·상태바 배지 (소스 그대로 게시, 번들 제외)
   state.ts                          ← on/off 상태 파일 공유 (server·tui 공용)
-dist/                               ← 빌드 산출물 (AGENTS.md 복사본 포함, git 추적)
+dist/                               ← 빌드 산출물 (skills 결합본 AGENTS.md 포함, git 추적)
 skills/
-  ohai-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
-  ohai-workflow-style/SKILL.md        ← git 워크플로우·에이전트 응답 스타일
+  ohai-coding-style/SKILL.md          ← 규칙 SSOT: 코드 작성 패턴·리뷰 기준
+  ohai-workflow-style/SKILL.md        ← 규칙 SSOT: git 워크플로우·에이전트 응답 스타일
   ohai-apply/SKILL.md                 ← 현재 세션에 스킬 강제 적용
-  simplify/SKILL.md                 ← 코드 변경 전 단순화 및 정제 검토
-  code-review/SKILL.md              ← 머지 전 엣지 케이스 및 품질 최종 검토
 hooks/                              ← SessionStart 등 훅
 scripts/
   bump-version.sh                   ← semver patch 자동 증가 (여러 버전 필드 동기화)
@@ -257,8 +255,10 @@ scripts/
 ### 버전 bump
 
 플러그인 수정 후 push 전에 semver patch를 자동 증가시킨다.
-`bump-version.sh`는 `.claude-plugin/plugin.json`과 `package.json`의
-버전 필드를 함께 올린다. (`1.0.0` → `1.0.1`)
+`bump-version.sh`는 `package.json`의 버전을 기준으로 아래 4개 파일의 버전 필드를 함께 올린다. (`1.0.0` → `1.0.1`)
+
+- `plugin.json`, `.claude-plugin/plugin.json`, `package.json`, `package-lock.json`
+- `jq`가 필요하다.
 
 ```bash
 bash scripts/bump-version.sh
