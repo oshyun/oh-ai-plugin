@@ -3,7 +3,7 @@
 oshyun 개인 AI 에이전트 플러그인.
 Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 적용된다.
 
-규칙 본문은 [content/AGENTS.md](content/AGENTS.md)(ohai-coding-style + ohai-workflow-style 결합 단일 SSOT)이며,
+규칙 본문은 [ohai-coding-style](skills/ohai-coding-style/SKILL.md) + [ohai-workflow-style](skills/ohai-workflow-style/SKILL.md) 두 스킬(SSOT)이며,
 엔진마다 이를 세션에 반영하는 방식이 다르다.
 
 | 엔진 | 주입 방식 | 적용 시점 |
@@ -21,8 +21,8 @@ Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 �
 - **훅(hook)**: 엔진이 특정 시점(세션 시작 등)에 외부 스크립트를 실행하고, 그 출력을 모델 컨텍스트에 추가하는 장치.
 - **스킬(skill)**: 마크다운으로 된 지침 파일. 모델이 필요할 때 읽어서 적용한다. 규칙 전문을 한 번에 다 넣지 않고 필요한 시점에 로드해 컨텍스트를 절약한다.
 
-oh-ai-plugin의 규칙 본문은 [content/AGENTS.md](content/AGENTS.md) 한 파일(SSOT)에 있고,
-엔진별로 "이 파일을 어떤 통로로 언제 모델 앞에 두느냐"만 다르다. 아래 섹션은 서로 독립적이라
+oh-ai-plugin의 규칙 본문은 `skills/`의 두 SKILL.md(SSOT)에 있고,
+엔진별로 "이 규칙을 어떤 통로로 언제 모델 앞에 두느냐"만 다르다. 아래 섹션은 서로 독립적이라
 쓰는 엔진 것만 읽으면 된다.
 
 ---
@@ -159,7 +159,7 @@ Claude Code·Copilot의 "훅 → 스킬" 2단계와 달리, opencode는 플러�
 
 1. **플러그인 로드** → opencode가 시작될 때 설치된 플러그인(`dist/index.js`)을 읽어 들인다.
 2. **규칙 사전 적재** → 플러그인 초기화 시점에 `dist/AGENTS.md`를 한 번 읽어 메모리에 보관한다.
-   이 파일은 빌드 때 `content/AGENTS.md`(SSOT)에서 복사된 것이므로 소스와 항상 같다.
+   이 파일은 빌드 때 두 SKILL.md(SSOT)를 결합해 생성한 것이므로 스킬과 항상 같다.
 3. **매 요청 주입** → 사용자가 메시지를 보낼 때마다 `experimental.chat.system.transform` 훅이 실행되고,
    플러그인이 그 시점에 시스템 프롬프트 배열 끝에 규칙 전문을 push한다.
 4. **중복 방지** → 시스템 프롬프트에 이미 규칙이 있으면(헤더 마커 `Coding & Workflow Style` 검사) 다시 넣지 않는다.
@@ -231,16 +231,15 @@ server가 매 시스템 프롬프트 구성 시점에 이 값을 읽어 **토글
 plugin.json                         ← AGY 플러그인 메타 (version: semver 1.0.x)
 .claude-plugin/plugin.json          ← Claude 플러그인 메타 (version: semver 1.0.x)
 AGENTS.md                           ← oh-ai-plugin 자체 개발용 가이드
-content/AGENTS.md                   ← 규칙 SSOT (coding + workflow 결합 단일 파일)
 package.json                        ← opencode 플러그인 설정
 src/
   index.ts                          ← 시스템 프롬프트 훅으로 AGENTS.md 번들 주입 (server)
   tui.tsx                           ← TUI on/off 토글·상태바 배지 (소스 그대로 게시, 번들 제외)
   state.ts                          ← on/off 상태 파일 공유 (server·tui 공용)
-dist/                               ← 빌드 산출물 (AGENTS.md 복사본 포함, git 추적)
+dist/                               ← 빌드 산출물 (skills 결합본 AGENTS.md 포함, git 추적)
 skills/
-  ohai-coding-style/SKILL.md          ← 코드 작성 패턴·리뷰 기준
-  ohai-workflow-style/SKILL.md        ← git 워크플로우·에이전트 응답 스타일
+  ohai-coding-style/SKILL.md          ← 규칙 SSOT: 코드 작성 패턴·리뷰 기준
+  ohai-workflow-style/SKILL.md        ← 규칙 SSOT: git 워크플로우·에이전트 응답 스타일
   ohai-apply/SKILL.md                 ← 현재 세션에 스킬 강제 적용
 hooks/                              ← SessionStart 등 훅
 scripts/

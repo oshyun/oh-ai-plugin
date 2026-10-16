@@ -3,7 +3,7 @@ import { fileURLToPath } from "node:url";
 import type { Plugin, PluginModule } from "@opencode-ai/plugin";
 import { readState } from "./state";
 
-// 빌드로 dist/ 에 함께 복사되는 SSOT 규칙 파일(content/AGENTS.md).
+// 빌드 시 skills/ 의 SKILL.md 들을 결합해 dist/ 에 생성하는 규칙 파일.
 // 진입점이 dist/index.js 이므로 같은 디렉토리의 ./AGENTS.md 를 가리킨다.
 const RULES_FILE = fileURLToPath(new URL("./AGENTS.md", import.meta.url));
 
