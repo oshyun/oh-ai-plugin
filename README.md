@@ -8,10 +8,10 @@ Claude Code, Copilot, opencode, Antigravity 등 에이전트 도구에 공통 �
 
 | 엔진 | 주입 방식 | 적용 시점 |
 |------|-----------|-----------|
-| Claude Code | SessionStart 훅이 스킬 로드를 지시 → 스킬이 규칙 적재 | 새 세션 자동 / 진행 세션은 `/oh-ai-plugin:ohai-apply` |
-| Copilot | Claude Code와 동일한 훅, Copilot용 출력 형식 | 새 세션 자동 / 진행 세션은 `/oh-ai-plugin:ohai-apply` |
-| opencode | 플러그인이 매 요청마다 시스템 프롬프트에 규칙 전문 직접 주입 | 새 세션 자동 / TUI 토글로 on/off |
-| Antigravity | `plugin.json` + `skills/`를 AGY가 자동 로드 | 새 세션 자동 |
+| Claude Code | SessionStart 훅이 스킬 로드를 지시 → 스킬이 규칙 적재 | 새 세션 자동 (업데이트 후 세션 재시작) |
+| Copilot | Claude Code와 동일한 훅, Copilot용 출력 형식 | 새 세션 자동 (업데이트 후 세션 재시작) |
+| opencode | 플러그인이 매 요청마다 시스템 프롬프트에 규칙 전문 직접 주입 | 상시 자동 (업데이트 즉시 반영) / TUI 토글로 on/off |
+| Antigravity | `plugin.json` + `skills/`를 AGY가 자동 로드 | 새 세션 자동 (업데이트 후 세션 재시작) |
 
 ### 먼저 알아둘 개념
 
@@ -103,31 +103,23 @@ rm -rf ~/.gemini/config/plugins/oh-ai-plugin
 즉 "훅이 지시문을 심고, 스킬이 본문을 실어 나르는" 2단계 구조다.
 규칙 전문을 세션 시작 때 한꺼번에 넣지 않기 때문에, 규칙이 필요 없는 대화에서는 컨텍스트를 소모하지 않는다.
 
-**세션 도중 업데이트를 반영하는 법:**
+**업데이트 반영:**
 
-- `/plugin marketplace update oshyun`이 reload를 해도 갱신되는 건 디스크의 플러그인 파일뿐이다.
-  이미 진행 중인 세션의 컨텍스트는 세션이 열렸을 때의 그대로다.
-- `/oh-ai-plugin:ohai-apply`를 실행하면 모델이 최신 스킬 두 개를 즉시 읽어 현재 세션에 적재한다.
-  스킬이 나중에 읽혀 컨텍스트 뒤쪽에 놓이므로 이전 지시문보다 우선 적용된다.
-- 세션을 새로 열면 훅이 다시 실행되므로, 새 세션이면 별도 명령 없이 최신 규칙이 적용된다.
+- `/plugin marketplace update oshyun`으로 플러그인을 업데이트한 뒤, 새 세션을 시작하면 최신 규칙이 적용된다.
 
 ### 설치
 
 ```
 /plugin marketplace add oshyun/oh-ai-plugin
 /plugin install oh-ai-plugin@oshyun
-/oh-ai-plugin:ohai-apply
 ```
 
 ### 업데이트
 
-`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload한다.
-진행 중인 세션에 새 규칙을 즉시 반영하려면 `/oh-ai-plugin:ohai-apply`를 실행한다.
-세션을 새로 열면 훅 주입부터 최신 상태가 적용된다.
+`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload한다. 새 세션을 시작하면 최신 규칙이 적용된다.
 
 ```
 /plugin marketplace update oshyun
-/oh-ai-plugin:ohai-apply
 ```
 
 ### 삭제
@@ -155,21 +147,18 @@ Claude Code와 같은 훅·스킬 2단계 구조를 쓰되, 훅 출력 형식만
 
 4. 이후 흐름은 동일하다 — 모델이 코드·git 작업 전에 두 스킬을 읽고, 규칙이 적용된다.
 
-세션 도중 업데이트를 반영하려면 Claude Code와 마찬가지로 `/oh-ai-plugin:ohai-apply`를 실행한다.
-
 ### 설치
 
 ```
 /plugin install oh-ai-plugin@oshyun
-/oh-ai-plugin:ohai-apply
 ```
 
 ### 업데이트
 
 ```
 /plugin update oh-ai-plugin
-/oh-ai-plugin:ohai-apply
 ```
+업데이트 후 새 세션을 시작한다.
 
 ### 삭제
 
@@ -192,8 +181,7 @@ Claude Code·Copilot의 "훅 → 스킬" 2단계와 달리, opencode는 플러�
    플러그인이 그 시점에 시스템 프롬프트 배열 끝에 규칙 전문을 push한다.
 4. **중복 방지** → 시스템 프롬프트에 이미 규칙이 있으면(헤더 마커 `Coding & Workflow Style` 검사) 다시 넣지 않는다.
 
-규칙이 시스템 프롬프트에 항상 존재하므로 모델이 스킬을 읽는 단계가 없고,
-`/oh-ai-plugin:ohai-apply`도 필요 없다. 새 세션, 진행 세션 구분 없이 항상 적용돼 있다.
+규칙이 시스템 프롬프트에 항상 존재하므로 모델이 스킬을 읽는 단계가 없다. 새 세션, 진행 세션 구분 없이 항상 적용돼 있다.
 
 **TUI 토글과의 연동:**
 
@@ -246,7 +234,6 @@ server가 매 시스템 프롬프트 구성 시점에 이 값을 읽어 **토글
 ```
 /oh-ai-plugin:ohai-coding-style
 /oh-ai-plugin:ohai-workflow-style
-/oh-ai-plugin:ohai-apply
 ```
 
 ---
@@ -268,7 +255,6 @@ dist/                               ← 빌드 산출물 (skills 결합본 AGENT
 skills/
   ohai-coding-style/SKILL.md          ← 규칙 SSOT: 코드 작성 패턴·리뷰 기준
   ohai-workflow-style/SKILL.md        ← 규칙 SSOT: git 워크플로우·에이전트 응답 스타일
-  ohai-apply/SKILL.md                 ← 현재 세션에 스킬 강제 적용
 hooks/                              ← SessionStart 등 훅
 scripts/
   bump-version.sh                   ← semver patch 자동 증가 (여러 버전 필드 동기화)

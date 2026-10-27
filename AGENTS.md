@@ -31,27 +31,28 @@ bash scripts/bump-version.sh
 
 ## 플러그인 업데이트 (push 후 세션 반영)
 
+플러그인 업데이트 후 변경된 규칙은 **새 세션을 시작하거나 세션을 재시작**하면 자동 반영된다.
+
 **Claude Code:**
 
 ```
 /plugin marketplace update oshyun
-/oh-ai-plugin:ohai-apply
 ```
-
-`/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload하므로 별도 reload 명령이 필요 없다.
+- `/plugin marketplace update oshyun`은 갱신 후 플러그인을 자동 reload한다. 새 세션부터 최신 규칙이 적용된다.
 
 **Copilot:**
 
 ```
 /plugin update oh-ai-plugin
-/oh-ai-plugin:ohai-apply
 ```
+- 업데이트 후 새 세션을 시작한다.
 
 **opencode:**
 
 ```
 /plugin update oh-ai-plugin
 ```
+- opencode는 플러그인이 매 요청마다 시스템 프롬프트에 규칙을 직접 주입하므로 별도 적용 명령이 불필요하다.
 
 **Antigravity (AGY):**
 
@@ -59,7 +60,3 @@ bash scripts/bump-version.sh
 git -C ~/.gemini/config/plugins/oh-ai-plugin pull
 ```
 - pull 후 새 세션을 시작하면 최신 스킬이 자동 로드된다.
-
-- `/oh-ai-plugin:ohai-apply`는 ohai-workflow-style과 ohai-coding-style을 현재 세션에 즉시 강제 적용한다.
-- Skill 호출분이 컨텍스트에 추가되면 SessionStart 주입분보다 나중에 위치하므로 우선 적용된다.
-- opencode는 플러그인이 매 요청마다 시스템 프롬프트에 규칙을 직접 주입하므로 별도 적용 명령이 불필요하다.
