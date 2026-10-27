@@ -53,6 +53,13 @@ bash scripts/bump-version.sh
 /plugin update oh-ai-plugin
 ```
 
+**Antigravity (AGY):**
+
+```bash
+git -C ~/.gemini/config/plugins/oh-ai-plugin pull
+```
+- pull 후 새 세션을 시작하면 최신 스킬이 자동 로드된다.
+
 - `/oh-ai-plugin:ohai-apply`는 ohai-workflow-style과 ohai-coding-style을 현재 세션에 즉시 강제 적용한다.
 - Skill 호출분이 컨텍스트에 추가되면 SessionStart 주입분보다 나중에 위치하므로 우선 적용된다.
 - opencode는 플러그인이 매 요청마다 시스템 프롬프트에 규칙을 직접 주입하므로 별도 적용 명령이 불필요하다.
