@@ -45,6 +45,34 @@ oh-ai-plugin의 규칙 본문은 `skills/`의 두 SKILL.md(SSOT)에 있고,
 agy plugin install https://github.com/oshyun/oh-ai-plugin.git
 ```
 
+또는 플러그인 디렉토리에 직접 clone할 수 있다:
+
+```bash
+git clone https://github.com/oshyun/oh-ai-plugin.git ~/.gemini/config/plugins/oh-ai-plugin
+```
+
+### 업데이트
+
+`agy plugin`에는 별도 update 명령이 없으므로, 설치 디렉토리에서 pull을 실행한다:
+
+```bash
+git -C ~/.gemini/config/plugins/oh-ai-plugin pull
+```
+
+업데이트 후 새 세션을 시작하면 최신 스킬이 자동 로드된다.
+
+### 삭제
+
+```bash
+agy plugin uninstall oh-ai-plugin
+```
+
+또는 수동 설치한 경우 디렉토리를 제거한다:
+
+```bash
+rm -rf ~/.gemini/config/plugins/oh-ai-plugin
+```
+
 ---
 
 ## Claude Code

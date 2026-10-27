@@ -5,6 +5,12 @@ import { readState } from "./state";
 
 // 빌드 시 skills/ 의 SKILL.md 들을 결합해 dist/ 에 생성하는 규칙 파일.
 // 진입점이 dist/index.js 이므로 같은 디렉토리의 ./AGENTS.md 를 가리킨다.
+//
+// [설계 판단 근거: 전문 직접 주입 vs 스킬 지연 적재]
+// opencode는 스킬과 플러그인이 분리되어 있어, @opencode-ai/plugin API로는 번들 내부의
+// skills/ 를 opencode의 스킬 카탈로그에 등록할 수 없다. 모델에게 스킬 로드 지시문만 넣으면
+// 스킬 경로를 참조하지 못하므로, 플러그인 단일 설치로 안정적인 동작을 보장하기 위해
+// 시스템 프롬프트 변환 훅을 통해 AGENTS.md 전문을 직접 주입한다.
 const RULES_FILE = fileURLToPath(new URL("./AGENTS.md", import.meta.url));
 
 // 규칙 파일이 이미 시스템 프롬프트에 들어갔는지 판별하는 헤더 마커.
